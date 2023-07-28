@@ -2,9 +2,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-	id("org.springframework.boot") version "3.0.9"
-	id("io.spring.dependency-management") version "1.1.2"
+//	id("org.springframework.boot") version "3.0.9"
+//	id("io.spring.dependency-management") version "1.1.2"
 
+	id("org.springframework.boot") version "3.1.0"
+	id("io.spring.dependency-management") version "1.1.2"
 	val kotlinVer = "1.7.22"
 	kotlin("jvm") version kotlinVer
 	kotlin("plugin.spring") version kotlinVer
@@ -47,6 +49,7 @@ subprojects {
 		implementation("org.springframework.boot:spring-boot-starter-data-jpa") {
 			exclude("org.hibernate.orm", "hibernate-core")
 		}
+		implementation("org.springframework.boot:spring-boot-starter-security")
 		implementation("org.springframework.boot:spring-boot-starter-webflux")
 		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 		implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
@@ -76,7 +79,10 @@ subprojects {
 		implementation("io.vertx:vertx-jdbc-client:4.3.7")
 
 		testImplementation("org.springframework.boot:spring-boot-starter-test")
+		testImplementation("org.springframework.security:spring-security-test")
 		testImplementation("io.projectreactor:reactor-test")
+
+		developmentOnly("org.springframework.boot:spring-boot-devtools")
 	}
 
 	tasks.withType<KotlinCompile> {
