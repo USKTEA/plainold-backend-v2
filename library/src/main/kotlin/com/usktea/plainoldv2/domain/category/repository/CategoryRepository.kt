@@ -20,4 +20,9 @@ class CategoryRepository(
             orderBy(col(Category::id).asc())
         }
     }
+
+    override suspend fun save(entity: Category): Category {
+        //TODO
+        return entity
+    }
 }

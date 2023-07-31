@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service
 @Service
 class CategoryService(
     private val categoryRepository: CategoryRepository
-) {
-    suspend fun findAll(): List<CategoryDto> {
-        return categoryRepository.findAll().map {
-            category -> CategoryDto.from(category)
+) : GetCategoriesUseCase {
+    override suspend fun findAll(): List<CategoryDto> {
+        return categoryRepository.findAll().map { category ->
+            CategoryDto.from(category)
         }
     }
 }

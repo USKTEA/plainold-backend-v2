@@ -1,4 +1,4 @@
-package com.usktea.plainoldv2.library
+package com.usktea.plainoldv2
 
 import com.usktea.plainoldv2.domain.category.Category
 

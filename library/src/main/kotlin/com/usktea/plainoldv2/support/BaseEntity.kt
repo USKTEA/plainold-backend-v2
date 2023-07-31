@@ -6,18 +6,16 @@ import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
-import org.springframework.data.annotation.CreatedDate
 import java.time.Instant
-import java.time.LocalDate
 
 @MappedSuperclass
 class BaseEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
+    var id: Long = 0L
 ) {
     @CreationTimestamp
-    lateinit var createdAt : Instant
+    lateinit var createdAt: Instant
 
     @UpdateTimestamp
     lateinit var updatedAt: Instant
