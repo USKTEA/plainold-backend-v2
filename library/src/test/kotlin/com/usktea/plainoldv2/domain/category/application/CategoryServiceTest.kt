@@ -1,8 +1,7 @@
-package com.usktea.plainoldv2.library.category.application
+package com.usktea.plainoldv2.domain.category.application
 
-import com.usktea.plainoldv2.domain.category.application.CategoryService
 import com.usktea.plainoldv2.domain.category.repository.CategoryRepository
-import com.usktea.plainoldv2.library.createCategory
+import com.usktea.plainoldv2.createCategory
 import io.kotest.matchers.collections.shouldBeSameSizeAs
 import io.mockk.coEvery
 import io.mockk.mockk

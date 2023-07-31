@@ -8,6 +8,8 @@ plugins {
     kotlin("jvm") version kotlinVer
     kotlin("plugin.spring") version kotlinVer
     kotlin("plugin.jpa") version kotlinVer
+    kotlin("plugin.allopen") version kotlinVer
+    kotlin("plugin.noarg") version kotlinVer
 }
 
 allprojects {
@@ -111,7 +113,7 @@ subprojects {
 
 project(":application") {
     dependencies {
-        implementation(project(":library"))
+        api(project(":library"))
     }
     tasks.named<Jar>("jar") { enabled = false }
     tasks.named<BootJar>("bootJar") {
