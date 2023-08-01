@@ -20,7 +20,6 @@ import org.springframework.web.reactive.function.server.queryParamOrNull
 class ProductHandler(
     private val productService: ProductService
 ) {
-
     suspend fun findAllByPaging(request: ServerRequest): ServerResponse {
         val categoryId = request.queryParamOrNull("categoryId").let {
             when (!StringUtil.isNullOrEmpty(it)) {
@@ -32,12 +31,19 @@ class ProductHandler(
         val sortBy = request.queryParamOrNull("sort") ?: "id"
         val pageable = PageRequest.of(pageNumber - 1, 8, Sort.by(sortBy).descending())
 
-        val found = productService.findAllByPaging(FindProductSpec(categoryId), pageable)
+        val found = productService.findAllByPaging(FindProductSpec(categoryId = categoryId), pageable)
         val products = found.content.map { ProductDto.from(it) }
         val page = PageDto(pageNumber, found.totalPages, found.totalElements)
 
         return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(
             ProductsDto(products = products, page = page)
         )
+    }
+
+    suspend fun findById(request: ServerRequest): ServerResponse {
+        val productId = requireNotNull(request.pathVariable("id")).toLong()
+        val productDetail = productService.getProductDetail(FindProductSpec(productId = productId))
+
+        return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(productDetail)
     }
 }

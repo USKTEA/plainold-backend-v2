@@ -12,6 +12,7 @@ class ProductRouter {
     fun productRoutes(handler: ProductHandler) = coRouter {
         path(context).nest {
             GET("", handler::findAllByPaging)
+            GET("/{id}", handler::findById)
         }
     }
 }
