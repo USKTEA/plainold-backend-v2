@@ -2,7 +2,9 @@ package com.usktea.plainoldv2.application.endpoints.product
 
 import com.ninjasquad.springmockk.MockkBean
 import com.usktea.plainoldv2.application.fakeProduct
+import com.usktea.plainoldv2.application.productDetailDto
 import com.usktea.plainoldv2.domain.product.application.ProductService
+import io.kotest.matchers.equals.shouldBeEqual
 import io.mockk.coEvery
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -48,5 +50,20 @@ class ProductHandlerTest {
             .jsonPath("$.products[0].id").isEqualTo(1L)
             .jsonPath("$.products[1].id").isEqualTo(2L)
             .jsonPath("$.products[2].id").isEqualTo(3L)
+    }
+
+    @Test
+    fun `id에 맞는 상품 정보을 조회한다`() {
+        val productDetail = productDetailDto(id = 1L)
+
+        coEvery { productService.getProductDetail(productId = 1L) } returns productDetail
+
+        client.mutateWith(mockUser()).get()
+            .uri("/products/1")
+            .exchange()
+            .expectStatus().isOk
+            .expectHeader().contentType(MediaType.APPLICATION_JSON)
+            .expectBody()
+            .jsonPath("$.id").isEqualTo(1L)
     }
 }

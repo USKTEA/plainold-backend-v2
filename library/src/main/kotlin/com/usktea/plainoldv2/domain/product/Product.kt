@@ -17,7 +17,8 @@ class Product(
 
     var categoryId: Long = 0L,
 
-    @Embedded
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "product_id")
     val image: Image,
 
     @Embedded
@@ -36,8 +37,9 @@ class Product(
                 price = Price(1_000L),
                 categoryId = 1L,
                 image = Image(
+                    productId = 1L,
                     thumbnailUrl = ThumbnailUrl("1"),
-                    productImageUrls = mutableSetOf(ProductImageUrl("1"))
+                    productImageUrls = mutableSetOf(ProductImageUrl(imageId = 1L, value = "1"))
                 ),
                 description = ProductDescription(
                     summary = ProductSummary("Good"),

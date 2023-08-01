@@ -5,10 +5,12 @@ import com.linecorp.kotlinjdsl.querydsl.where.WhereDsl
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMutinyReactiveQueryFactory
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.listQuery
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.pageQuery
+import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
 import com.usktea.plainoldv2.domain.category.Category
 import com.usktea.plainoldv2.domain.product.FindProductSpec
-import com.usktea.plainoldv2.domain.product.Image
 import com.usktea.plainoldv2.domain.product.Product
+import com.usktea.plainoldv2.domain.product.ProductImageUrl
+import com.usktea.plainoldv2.domain.product.ThumbnailUrl
 import com.usktea.plainoldv2.support.BaseRepository
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import org.hibernate.reactive.mutiny.Mutiny
@@ -41,14 +43,21 @@ class ProductRepository(
         return queryFactory.pageQuery(pageable) {
             select(entity(Product::class))
             from(entity(Product::class))
-            fetch(Product::image)
-            fetch(Image::productImageUrls)
+            where(findSpec(spec))
+        }
+    }
+
+    suspend fun findBySpec(spec: FindProductSpec): Product {
+        return queryFactory.singleQuery<Product> {
+            select(entity(Product::class))
+            from(entity(Product::class))
             where(findSpec(spec))
         }
     }
 
     private fun WhereDsl.findSpec(spec: FindProductSpec) =
         and(
-            spec.categoryId?.let { col(Product::categoryId).equal(spec.categoryId) }
+            spec.categoryId?.let { col(Product::categoryId).equal(spec.categoryId) },
+            spec.productId?.let { col(Product::id).equal(spec.productId) }
         )
 }

@@ -12,8 +12,7 @@ data class Shipping(
 
     @AttributeOverride(name = "amount", column = Column(name = "freeShippingAmount"))
     val freeShippingAmount: Price
-) {
-}
+)
 
 enum class ShippingMethod(
     val method: String
