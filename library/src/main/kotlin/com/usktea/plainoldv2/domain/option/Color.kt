@@ -24,6 +24,6 @@ data class Rgb(
     var value: Int
 ) {
     init {
-        require(value > 255 || value <= 0) { RGB_VALUE_EXCEPTION }
+        require(value in 0..255) { RGB_VALUE_EXCEPTION }
     }
 }

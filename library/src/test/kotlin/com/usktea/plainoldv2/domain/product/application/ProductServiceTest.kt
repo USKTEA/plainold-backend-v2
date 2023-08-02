@@ -40,7 +40,7 @@ class ProductServiceTest {
         val findProductSpec = findProductSpec(productId = 1L)
 
         coEvery { productRepository.findBySpec(findProductSpec) } returns product
-        coEvery { optionRepository.findByProductId(productId = 1L) } returns option
+        coEvery { optionRepository.findByProductIdOrNull(productId = 1L) } returns option
 
         val productDetail = productService.getProductDetail(findProductSpec)
 
