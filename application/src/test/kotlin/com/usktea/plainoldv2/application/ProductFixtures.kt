@@ -27,6 +27,11 @@ fun productDetailDto(id: Long): ProductDetailDto {
             shippingFee = 1_000L,
             freeShippingAmount = 1_000L,
         ),
+        description = ProductDescriptionDto(
+            productSummary = "Good",
+            productDetail = "Very Good"
+        ),
+        optionData = null,
         status = ProductStatus.ON_SALE.status,
         createdAt = Instant.now(),
         updatedAt = Instant.now()

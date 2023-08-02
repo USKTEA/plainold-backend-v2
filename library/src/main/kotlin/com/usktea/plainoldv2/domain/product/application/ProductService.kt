@@ -5,6 +5,8 @@ import com.usktea.plainoldv2.domain.product.FindProductSpec
 import com.usktea.plainoldv2.domain.product.Product
 import com.usktea.plainoldv2.domain.product.ProductDetailDto
 import com.usktea.plainoldv2.domain.product.repository.ProductRepository
+import com.usktea.plainoldv2.exception.PRODUCT_NOT_FOUND
+import com.usktea.plainoldv2.exception.ProductNotFound
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -19,9 +21,13 @@ class ProductService(
     }
 
     override suspend fun getProductDetail(productSpec: FindProductSpec): ProductDetailDto {
-        val product = requireNotNull(productRepository.findBySpec(productSpec))
-        val option = optionRepository.findByProductIdOrNull(productSpec.productId!!)
+        try {
+            val product = productRepository.findBySpec(productSpec)
+            val option = optionRepository.findByProductIdOrNull(productSpec.productId!!)
 
-        return ProductDetailDto.from(product, option)
+            return ProductDetailDto.from(product, option)
+        } catch (exception: Exception) {
+            throw ProductNotFound(PRODUCT_NOT_FOUND)
+        }
     }
 }
