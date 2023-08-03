@@ -3,6 +3,9 @@ package com.usktea.plainoldv2.exception
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
-open class GlobalException(errorMessage: String) : ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage)
+open class GlobalException(httpStatus: HttpStatus = HttpStatus.BAD_REQUEST, errorMessage: String) :
+    ResponseStatusException(httpStatus, errorMessage)
 
-class ProductNotFound(errorMessage: String) : GlobalException(errorMessage)
+class ProductNotFoundException : GlobalException(errorMessage = PRODUCT_NOT_FOUND)
+class LoginFailedException : GlobalException(HttpStatus.FORBIDDEN, LOGIN_FAILED)
+class UnIdentifiedUserException : GlobalException(errorMessage = UNIDENTIFIED_USER)

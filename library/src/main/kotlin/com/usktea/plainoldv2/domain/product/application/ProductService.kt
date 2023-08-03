@@ -5,8 +5,7 @@ import com.usktea.plainoldv2.domain.product.FindProductSpec
 import com.usktea.plainoldv2.domain.product.Product
 import com.usktea.plainoldv2.domain.product.ProductDetailDto
 import com.usktea.plainoldv2.domain.product.repository.ProductRepository
-import com.usktea.plainoldv2.exception.PRODUCT_NOT_FOUND
-import com.usktea.plainoldv2.exception.ProductNotFound
+import com.usktea.plainoldv2.exception.ProductNotFoundException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -27,7 +26,7 @@ class ProductService(
 
             return ProductDetailDto.from(product, option)
         } catch (exception: Exception) {
-            throw ProductNotFound(PRODUCT_NOT_FOUND)
+            throw ProductNotFoundException()
         }
     }
 }

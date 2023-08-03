@@ -1,6 +1,7 @@
 package com.usktea.plainoldv2.application.endpoints.product
 
 import com.ninjasquad.springmockk.MockkBean
+import com.usktea.plainoldv2.application.createFindProductSpec
 import com.usktea.plainoldv2.application.fakeProduct
 import com.usktea.plainoldv2.application.productDetailDto
 import com.usktea.plainoldv2.domain.product.application.ProductService
@@ -55,8 +56,9 @@ class ProductHandlerTest {
     @Test
     fun `id에 맞는 상품 정보을 조회한다`() {
         val productDetail = productDetailDto(id = 1L)
+        val findProductSpec = createFindProductSpec(productId = 1L)
 
-        coEvery { productService.getProductDetail(productId = 1L) } returns productDetail
+        coEvery { productService.getProductDetail(findProductSpec) } returns productDetail
 
         client.mutateWith(mockUser()).get()
             .uri("/products/1")

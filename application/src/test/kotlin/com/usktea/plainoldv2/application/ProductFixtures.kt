@@ -3,6 +3,10 @@ package com.usktea.plainoldv2.application
 import com.usktea.plainoldv2.domain.product.*
 import java.time.Instant
 
+fun createFindProductSpec(productId: Long): FindProductSpec {
+    return FindProductSpec(productId = productId)
+}
+
 fun fakeProduct(productId: Long, categoryId: Long): Product {
     return Product.fake().apply {
         this.id = productId

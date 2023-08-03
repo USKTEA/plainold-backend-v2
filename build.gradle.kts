@@ -71,6 +71,12 @@ subprojects {
         implementation("io.agroal:agroal-pool:2.0")
         implementation("io.vertx:vertx-jdbc-client:4.3.7")
 
+        // crypto
+        implementation("org.bouncycastle:bcprov-jdk15on:1.70")
+
+        // jwt
+        implementation("com.auth0:java-jwt:4.4.0")
+
         // test
         testImplementation("org.springframework.boot:spring-boot-starter-test") {
             exclude(module = "mockito-core")

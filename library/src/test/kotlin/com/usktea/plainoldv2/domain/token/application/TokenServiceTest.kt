@@ -1,0 +1,40 @@
+package com.usktea.plainoldv2.domain.token.application
+
+import com.usktea.plainoldv2.createRefreshToken
+import com.usktea.plainoldv2.createUsername
+import com.usktea.plainoldv2.domain.token.RefreshToken
+import com.usktea.plainoldv2.domain.token.repository.RefreshTokenRepository
+import com.usktea.plainoldv2.domain.user.Username
+import com.usktea.plainoldv2.utils.JwtUtil
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import org.springframework.test.context.ActiveProfiles
+
+const val USERNAME = "tjrxo1234@gmail.com"
+
+@ActiveProfiles("test")
+class TokenServiceTest {
+    private val refreshTokenRepository = mockk<RefreshTokenRepository>()
+    private val jwtUtil = JwtUtil("SECRET")
+    private val tokenService = TokenService(refreshTokenRepository, jwtUtil)
+
+    @Test
+    fun `accessToken과 refreshToken을 생성한다`() = runTest {
+        val username = createUsername(USERNAME)
+        val refreshToken = createRefreshToken(USERNAME)
+
+        coEvery { refreshTokenRepository.save(any()) } returns refreshToken
+
+        val tokenDto = tokenService.issueToken(username)
+
+        jwtUtil.decode(tokenDto.accessToken) shouldBe USERNAME
+        tokenDto.refreshToken shouldNotBe null
+        coVerify(exactly = 1) { refreshTokenRepository.save(any()) }
+    }
+}

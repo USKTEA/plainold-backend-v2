@@ -9,7 +9,7 @@ fun findProductSpec(categoryId: Long? = null, productId: Long? = null): FindProd
     return FindProductSpec(categoryId = categoryId, productId = productId)
 }
 
-fun fakeProduct(productId: Long, categoryId: Long): Product {
+fun createProduct(productId: Long, categoryId: Long): Product {
     return Product.fake().apply {
         this.id = productId
         this.categoryId = categoryId
@@ -18,8 +18,8 @@ fun fakeProduct(productId: Long, categoryId: Long): Product {
     }
 }
 
-fun fakeOption(productId: Long): OptionData {
+fun createOption(productId: Long): OptionData {
     return OptionData.fake().apply {
-
+        this.productId = productId
     }
 }
