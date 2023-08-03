@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono
 @Order(-2)
 class GlobalErrorWebExceptionHandler(
     errorAttributes: ErrorAttributes,
-    resourceProperties: WebProperties.Resources,
+    resourceProperties: WebProperties.Resources = WebProperties.Resources(),
     applicationContext: ApplicationContext,
     serverCodecConfigurer: ServerCodecConfigurer
 ) : AbstractErrorWebExceptionHandler(
@@ -48,9 +48,10 @@ class GlobalErrorWebExceptionHandler(
     ): Mono<ServerResponse> {
         val errorProperties = errorAttributes.getErrorAttributes(request, ErrorAttributeOptions.defaults())
         val message = errorAttributes.getError(request).message
+        val status = errorProperties["status"].toString().toInt()
         errorProperties["message"] = message
 
-        return ServerResponse.status(HttpStatus.BAD_REQUEST)
+        return ServerResponse.status(HttpStatus.valueOf(status))
             .contentType(MediaType.APPLICATION_JSON)
             .body(BodyInserters.fromValue(errorProperties))
     }

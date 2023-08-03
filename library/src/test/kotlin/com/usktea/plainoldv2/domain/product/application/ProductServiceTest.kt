@@ -1,9 +1,9 @@
 package com.usktea.plainoldv2.domain.product.application
 
+import com.usktea.plainoldv2.createOption
+import com.usktea.plainoldv2.createProduct
 import com.usktea.plainoldv2.domain.option.repository.OptionRepository
 import com.usktea.plainoldv2.domain.product.repository.ProductRepository
-import com.usktea.plainoldv2.fakeOption
-import com.usktea.plainoldv2.fakeProduct
 import com.usktea.plainoldv2.findProductSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
@@ -22,7 +22,7 @@ class ProductServiceTest {
 
     @Test
     fun `페이징 조건에 맞는 모든 상품을 조회한다`() = runTest {
-        val products = PageImpl(listOf(fakeProduct(productId = 1L, categoryId = 1L)))
+        val products = PageImpl(listOf(createProduct(productId = 1L, categoryId = 1L)))
         val findProductSpec = findProductSpec(categoryId = 1L)
         val pageable = PageRequest.of(0, 8, Sort.by("id").descending())
 
@@ -35,8 +35,8 @@ class ProductServiceTest {
 
     @Test
     fun `id에 맞는 상품과 상품의 옵션 정보를 조회한다`() = runTest {
-        val product = fakeProduct(productId = 1L, categoryId = 1L)
-        val option = fakeOption(productId = 1L)
+        val product = createProduct(productId = 1L, categoryId = 1L)
+        val option = createOption(productId = 1L)
         val findProductSpec = findProductSpec(productId = 1L)
 
         coEvery { productRepository.findBySpec(findProductSpec) } returns product

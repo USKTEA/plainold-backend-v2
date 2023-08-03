@@ -11,8 +11,8 @@ class CorsConfiguration {
     @Bean
     fun corsFilter(): CorsWebFilter {
         val config = CorsConfiguration()
-        config.allowCredentials = false
-        config.addAllowedOrigin("*")
+        config.allowCredentials = true
+        config.addAllowedOrigin("http://localhost:8080/")
         config.addAllowedHeader("*")
         config.addAllowedMethod("*")
 

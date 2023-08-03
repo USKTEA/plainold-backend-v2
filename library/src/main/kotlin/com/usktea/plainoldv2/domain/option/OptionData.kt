@@ -7,7 +7,7 @@ import jakarta.persistence.Entity
 @Entity
 class OptionData(
     id: Long = 0L,
-    val productId: Long,
+    var productId: Long,
 
     @ElementCollection
     val sizes: MutableSet<String>,
