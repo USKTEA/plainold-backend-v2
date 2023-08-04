@@ -9,3 +9,4 @@ open class GlobalException(httpStatus: HttpStatus = HttpStatus.BAD_REQUEST, erro
 class ProductNotFoundException : GlobalException(errorMessage = PRODUCT_NOT_FOUND)
 class LoginFailedException : GlobalException(HttpStatus.FORBIDDEN, LOGIN_FAILED)
 class UnIdentifiedUserException : GlobalException(errorMessage = UNIDENTIFIED_USER)
+class RequestAttributeNotFoundException : GlobalException(errorMessage = REQUEST_ATTRIBUTE_NOT_FOUND)

@@ -32,7 +32,7 @@ class User(
 
     @Embedded
     @AttributeOverride(name = "amount", column = Column(name = "purchaseAmount"))
-    var money: Money = Money(0L)
+    var purchaseAmount: Money = Money(0L)
 ) : BaseEntity(id) {
     companion object {
         fun fake(): User {

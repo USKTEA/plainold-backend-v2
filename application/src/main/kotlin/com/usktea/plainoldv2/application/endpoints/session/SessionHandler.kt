@@ -1,5 +1,6 @@
 package com.usktea.plainoldv2.application.endpoints.session
 
+import com.usktea.plainoldv2.domain.user.LoginRequest
 import com.usktea.plainoldv2.domain.user.LoginRequestDto
 import com.usktea.plainoldv2.domain.user.LoginResultDto
 import com.usktea.plainoldv2.domain.user.application.UserService
@@ -17,7 +18,7 @@ class SessionHandler(
     private val userService: UserService
 ) {
     suspend fun login(request: ServerRequest): ServerResponse {
-        val loginRequest = request.awaitBody<LoginRequestDto>().toVo()
+        val loginRequest = LoginRequest.from(request.awaitBody<LoginRequestDto>())
         val tokenDto = userService.login(loginRequest)
         val cookie = ResponseCookie.from("refreshToken", tokenDto.refreshToken)
             .httpOnly(true)

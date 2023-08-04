@@ -2,20 +2,18 @@ package com.usktea.plainoldv2.utils
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import org.springframework.beans.factory.annotation.Value
 import java.util.*
 
 class JwtUtil(
-    secret: String
+    @Value("\${jwt.secret}")
+    private val secret: String
 ) {
-    private val algorithm: Algorithm
+    private val algorithm: Algorithm = Algorithm.HMAC256(secret)
 
     companion object {
         const val ACCESS_TOKEN_VALIDATION_SECOND: Long = 1000L * 60 * 30;
         const val REFRESH_TOKEN_VALIDATION_SECOND: Long = 1000L * 60 * 60 * 24 * 14
-    }
-
-    init {
-        this.algorithm = Algorithm.HMAC256(secret)
     }
 
     fun encode(username: String): String {

@@ -1,9 +1,11 @@
 package com.usktea.plainoldv2.application.endpoints.category
 
 import com.ninjasquad.springmockk.MockkBean
+import com.ninjasquad.springmockk.SpykBean
 import com.usktea.plainoldv2.application.categoryDto
 import com.usktea.plainoldv2.domain.category.CategoriesDto
 import com.usktea.plainoldv2.domain.category.application.CategoryService
+import com.usktea.plainoldv2.utils.JwtUtil
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import org.junit.jupiter.api.Assertions.*
@@ -23,6 +25,9 @@ class CategoryHandlerTest {
 
     @MockkBean
     private lateinit var categoryService: CategoryService
+
+    @SpykBean
+    private lateinit var jwtUtil: JwtUtil
 
     @Test
     fun `모든 카테고리를 조회한다`() {
