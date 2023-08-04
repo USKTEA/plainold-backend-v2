@@ -1,11 +1,14 @@
 package com.usktea.plainoldv2.application.endpoints.session
 
 import com.ninjasquad.springmockk.MockkBean
+import com.ninjasquad.springmockk.SpykBean
 import com.usktea.plainoldv2.application.INVALID_PASSWORD
 import com.usktea.plainoldv2.application.createLoginRequestDto
 import com.usktea.plainoldv2.application.createTokenDto
+import com.usktea.plainoldv2.domain.user.LoginRequest
 import com.usktea.plainoldv2.domain.user.application.UserService
 import com.usktea.plainoldv2.exception.LoginFailedException
+import com.usktea.plainoldv2.utils.JwtUtil
 import io.mockk.coEvery
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,11 +25,13 @@ class SessionHandlerTest {
     @MockkBean
     private lateinit var userService: UserService
 
+    @SpykBean
+    private lateinit var jwtUtil: JwtUtil
+
     @Test
     fun `정상적으로 로그인이 되면 accessToken과 refreshToken을 발급한다`() {
         val loginRequestDto = createLoginRequestDto()
-        val loginRequest = loginRequestDto.toVo()
-
+        val loginRequest = LoginRequest.from(loginRequestDto)
         val tokenDto = createTokenDto()
 
         coEvery { userService.login(loginRequest) } returns tokenDto
@@ -44,7 +49,7 @@ class SessionHandlerTest {
     @Test
     fun `잘못된 회원 로그인 요청에 응답으로 403 Forbidden을 반환한다`() {
         val loginRequestDto = createLoginRequestDto(password = INVALID_PASSWORD)
-        val loginRequest = loginRequestDto.toVo()
+        val loginRequest = LoginRequest.from(loginRequestDto)
 
         coEvery { userService.login(loginRequest) } throws LoginFailedException()
 

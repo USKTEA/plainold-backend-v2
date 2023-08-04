@@ -58,9 +58,9 @@ data class ProductDetailDto(
                 price = product.price.amount,
                 name = product.productName.value,
                 categoryId = product.categoryId,
-                image = ImageDto.of(product.image),
-                description = ProductDescriptionDto.of(product.description),
-                shipping = ShippingDto.of(product.shipping),
+                image = ImageDto.from(product.image),
+                description = ProductDescriptionDto.from(product.description),
+                shipping = ShippingDto.from(product.shipping),
                 status = product.productStatus.status,
                 createdAt = product.createdAt,
                 updatedAt = product.updatedAt,
@@ -99,7 +99,7 @@ data class ImageDto(
     }
 
     companion object {
-        fun of(image: Image): ImageDto {
+        fun from(image: Image): ImageDto {
             return ImageDto(
                 thumbnailUrl = image.thumbnailUrl.value,
                 productImageUrls = image.productImageUrls.map {
@@ -116,7 +116,7 @@ data class ShippingDto(
     val freeShippingAmount: Long
 ) {
     companion object {
-        fun of(shipping: Shipping): ShippingDto {
+        fun from(shipping: Shipping): ShippingDto {
             return ShippingDto(
                 shippingMethod = shipping.shippingMethod.method,
                 shippingFee = shipping.shippingFee.amount,
@@ -131,7 +131,7 @@ data class ProductDescriptionDto(
     val productDetail: String
 ) {
     companion object {
-        fun of(description: ProductDescription): ProductDescriptionDto {
+        fun from(description: ProductDescription): ProductDescriptionDto {
             return ProductDescriptionDto(
                 productSummary = description.summary.content,
                 productDetail = description.detail.content

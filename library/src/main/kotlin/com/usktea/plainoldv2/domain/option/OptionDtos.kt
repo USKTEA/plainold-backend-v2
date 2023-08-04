@@ -9,7 +9,7 @@ data class OptionDataDto(
             return OptionDataDto(
                 sizes = optionData.sizes,
                 colors = optionData.colors.map {
-                    ColorDto.of(it)
+                    ColorDto.from(it)
                 }.toMutableSet()
             )
         }
@@ -23,7 +23,7 @@ data class ColorDto(
     val blue: Int
 ) {
     companion object {
-        fun of(color: Color): ColorDto {
+        fun from(color: Color): ColorDto {
             return ColorDto(
                 name = color.name,
                 red = color.red.value,

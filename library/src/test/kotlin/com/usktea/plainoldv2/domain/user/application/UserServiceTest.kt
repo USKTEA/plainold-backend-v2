@@ -70,4 +70,20 @@ class UserServiceTest {
 
         shouldThrow<LoginFailedException> { userService.login(loginRequest) }
     }
+
+    @Test
+    fun `회원 정보로 특정 회원 정보를 조회한다`() = runTest {
+        val username = createUsername(
+            value = USERNAME
+        )
+        val user = createUser(
+            username = username,
+        )
+
+        coEvery { userRepository.findByUsernameOrNull(username) } returns user
+
+        val userInformation = userService.getUserInformation(username)
+
+        userInformation.username shouldBe USERNAME
+    }
 }

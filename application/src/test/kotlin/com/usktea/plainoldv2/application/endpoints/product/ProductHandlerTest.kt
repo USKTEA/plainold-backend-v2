@@ -1,10 +1,12 @@
 package com.usktea.plainoldv2.application.endpoints.product
 
 import com.ninjasquad.springmockk.MockkBean
+import com.ninjasquad.springmockk.SpykBean
 import com.usktea.plainoldv2.application.createFindProductSpec
 import com.usktea.plainoldv2.application.fakeProduct
 import com.usktea.plainoldv2.application.productDetailDto
 import com.usktea.plainoldv2.domain.product.application.ProductService
+import com.usktea.plainoldv2.utils.JwtUtil
 import io.kotest.matchers.equals.shouldBeEqual
 import io.mockk.coEvery
 import org.junit.jupiter.api.Assertions.*
@@ -27,6 +29,9 @@ class ProductHandlerTest {
 
     @MockkBean
     private lateinit var productService: ProductService
+
+    @SpykBean
+    private lateinit var jwtUtil: JwtUtil
 
     @Test
     fun `페이징 조건에 맞는 모든 상품을 조회한다`() {
