@@ -1,15 +1,11 @@
 package com.usktea.plainoldv2.domain.user
 
+import com.usktea.plainoldv2.domain.oAuth.UserProfile
 import com.usktea.plainoldv2.exception.UnIdentifiedUserException
 import com.usktea.plainoldv2.support.BaseEntity
-import jakarta.persistence.AttributeOverride
-import jakarta.persistence.Column
-import jakarta.persistence.Embedded
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
+import jakarta.persistence.*
 import org.springframework.security.crypto.password.PasswordEncoder
+import java.util.*
 
 @Entity
 class User(
@@ -51,6 +47,15 @@ class User(
                 password = signUpRequest.password,
                 nickname = signUpRequest.nickname,
                 role = Role.MEMBER,
+            )
+        }
+
+        fun createRoleMember(userProfile: UserProfile, passwordEncoder: PasswordEncoder): User {
+            return User(
+                username = Username(userProfile.email),
+                password = Password(passwordEncoder.encode(UUID.randomUUID().toString())),
+                nickname = Nickname(userProfile.nickname),
+                role = Role.MEMBER
             )
         }
     }

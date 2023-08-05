@@ -42,6 +42,7 @@ class SessionHandlerTest {
             .bodyValue(loginRequestDto)
             .exchange()
             .expectStatus().isOk
+            .expectCookie().exists("refreshToken")
             .expectBody()
             .jsonPath("$.accessToken").exists()
     }
