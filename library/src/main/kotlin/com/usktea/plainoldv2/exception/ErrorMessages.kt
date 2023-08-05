@@ -9,3 +9,4 @@ const val REQUEST_ATTRIBUTE_NOT_FOUND = "Request Attribute를 가져오지 못 �
 const val PARAMETER_NOT_FOUND = "파라미터를 가져오지 못 했습니다"
 const val REQUEST_BODY_NOT_FOUND = "Request Body를 가져오지 못 했습니다"
 const val USERNAME_ALREADY_IN_USE = "이미 사용 중인 사용자이름입니다"
+const val OAUTH_PROVIDER_NOT_FOUND = "OAuth Provider를 가져오지 못 했습니다"

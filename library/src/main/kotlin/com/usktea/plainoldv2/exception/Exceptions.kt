@@ -13,3 +13,4 @@ class RequestAttributeNotFoundException : GlobalException(errorMessage = REQUEST
 class ParameterNotFoundException : GlobalException(errorMessage = PARAMETER_NOT_FOUND)
 class RequestBodyNotFoundException : GlobalException(errorMessage = REQUEST_BODY_NOT_FOUND)
 class UsernameAlreadyInUse : GlobalException(errorMessage = USERNAME_ALREADY_IN_USE)
+class OAuthProviderNotFoundException : GlobalException(errorMessage = OAUTH_PROVIDER_NOT_FOUND)
