@@ -1,8 +1,7 @@
 package com.usktea.plainoldv2.application
 
 import com.usktea.plainoldv2.domain.token.TokenDto
-import com.usktea.plainoldv2.domain.user.LoginRequestDto
-import com.usktea.plainoldv2.domain.user.UserInformationDto
+import com.usktea.plainoldv2.domain.user.*
 
 const val USERNAME = "tjrxo1234@gmail.com"
 const val PASSWORD = "Password1234!"
@@ -34,4 +33,16 @@ fun createUserInformationDto(username: String): UserInformationDto {
         purchaseAmount = PURCHASE_AMOUNT,
         role = ROLE,
     )
+}
+
+fun createUsername(username: String): Username {
+    return Username(username)
+}
+
+fun createSignUpRequestDto(username: String, password: String, nickname: String): SignUpRequestDto {
+    return SignUpRequestDto(username, password, nickname)
+}
+
+fun createSignUpResult(username: String): SignUpResult {
+    return SignUpResult(id = 1L, username = Username(username))
 }
