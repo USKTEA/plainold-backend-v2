@@ -12,6 +12,8 @@ class UserRouter {
     fun userRoutes(handler: UserHandler) = coRouter {
         path(context).nest {
             GET("/me", handler::findMe)
+            GET("", handler::count)
+            POST("", handler::signUp)
         }
     }
 }

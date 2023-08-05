@@ -1,14 +1,16 @@
 package com.usktea.plainoldv2.application.endpoints.user
 
-import com.usktea.plainoldv2.domain.user.Username
+import com.usktea.plainoldv2.domain.user.*
 import com.usktea.plainoldv2.domain.user.application.UserService
+import com.usktea.plainoldv2.exception.ParameterNotFoundException
+import com.usktea.plainoldv2.exception.RequestAttributeNotFoundException
+import com.usktea.plainoldv2.exception.RequestBodyNotFoundException
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.*
+import org.springframework.web.reactive.function.server.ServerResponse.created
 import org.springframework.web.reactive.function.server.ServerResponse.ok
-import org.springframework.web.reactive.function.server.bodyValueAndAwait
-import javax.management.AttributeNotFoundException
+import java.net.URI
 
 @Component
 class UserHandler(
@@ -21,11 +23,28 @@ class UserHandler(
         return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(userDetail)
     }
 
+    suspend fun count(request: ServerRequest): ServerResponse {
+        val username = request.queryParamOrNull("username") ?: throw ParameterNotFoundException()
+        val count = userService.count(Username(username))
+
+        return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(CountUserDto(count))
+    }
+
+    suspend fun signUp(request: ServerRequest): ServerResponse {
+        val signUpRequest = request.awaitBodyOrNull<SignUpRequestDto>()?.let { SignUpRequest.from(it) }
+            ?: throw RequestBodyNotFoundException()
+
+        val signupResult = userService.signUp(signUpRequest).let { SignUpResultDto.from(it) }
+
+        return created(URI.create("/users/${signupResult.id}")).contentType(MediaType.APPLICATION_JSON)
+            .bodyValueAndAwait(signupResult)
+    }
+
     private fun extractAttribute(request: ServerRequest): Username {
         val attribute = request.attributes()["username"]
 
         if (attribute == null || attribute !is Username) {
-            throw AttributeNotFoundException()
+            throw RequestAttributeNotFoundException()
         }
 
         return attribute

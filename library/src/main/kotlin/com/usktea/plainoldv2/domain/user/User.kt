@@ -28,7 +28,7 @@ class User(
     var role: Role,
 
     @Enumerated(EnumType.STRING)
-    var userStatus: UserStatus,
+    var userStatus: UserStatus = UserStatus.ACTIVE,
 
     @Embedded
     @AttributeOverride(name = "amount", column = Column(name = "purchaseAmount"))
@@ -42,6 +42,15 @@ class User(
                 nickname = Nickname("김뚜루"),
                 role = Role.MEMBER,
                 userStatus = UserStatus.ACTIVE,
+            )
+        }
+
+        fun createRoleMember(signUpRequest: SignUpRequest): User {
+            return User(
+                username = signUpRequest.username,
+                password = signUpRequest.password,
+                nickname = signUpRequest.nickname,
+                role = Role.MEMBER,
             )
         }
     }

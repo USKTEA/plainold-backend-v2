@@ -2,6 +2,7 @@ package com.usktea.plainoldv2.domain.user.application
 
 import com.usktea.plainoldv2.*
 import com.usktea.plainoldv2.domain.token.application.TokenService
+import com.usktea.plainoldv2.domain.user.User
 import com.usktea.plainoldv2.domain.user.repository.UserRepository
 import com.usktea.plainoldv2.exception.LoginFailedException
 import io.kotest.assertions.throwables.shouldThrow
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 
 const val USERNAME = "tjrxo1234@gmail.com"
 const val PASSWORD = "Password1234!"
+const val NICKNAME = "김뚜루"
 const val VALID_TOKEN = "SOME_VALID_TOKEN"
 
 class UserServiceTest {
@@ -85,5 +87,37 @@ class UserServiceTest {
         val userInformation = userService.getUserInformation(username)
 
         userInformation.username shouldBe USERNAME
+    }
+
+    @Test
+    fun `회원 수를 조회한다`() = runTest {
+        val username = createUsername(
+            value = USERNAME
+        )
+
+        coEvery { userRepository.count(username) } returns 1L
+
+        val count = userService.count(username)
+
+        count shouldBe 1L
+    }
+
+    @Test
+    fun `회원을 생성한다`() = runTest {
+        val username = createUsername(USERNAME)
+        val password = createPassword(PASSWORD)
+        val nickname = createNickname(NICKNAME)
+
+        val createRequest = createUserSignUpRequest(
+            username, password, nickname
+        )
+
+        val user = User.createRoleMember(createRequest)
+
+        coEvery { userRepository.save(user) } returns user
+
+        val result = userService.signUp(createRequest)
+
+        result.username shouldBe username
     }
 }

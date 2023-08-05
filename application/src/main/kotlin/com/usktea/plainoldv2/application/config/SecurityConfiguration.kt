@@ -33,7 +33,6 @@ class SecurityConfiguration {
     }
 }
 
-
 @Component
 class RequestContextWebFilter(
     private val jwtUtil: JwtUtil
@@ -41,6 +40,7 @@ class RequestContextWebFilter(
     companion object {
         private const val BEARER_PREFIX = "Bearer "
     }
+
     override fun filter(
         exchange: ServerWebExchange,
         chain: WebFilterChain
@@ -51,12 +51,16 @@ class RequestContextWebFilter(
             return chain.filter(exchange)
         }
 
-        val username = accessToken.substring(BEARER_PREFIX.length)
-            .let { jwtUtil.decode(it) }
-            .let { Username(it) }
+        val username = accessToken.toUsername()
 
         exchange.attributes["username"] = username
 
         return chain.filter(exchange)
+    }
+
+    private fun String.toUsername(): Username {
+        return Username(
+            this.substring(BEARER_PREFIX.length).let { jwtUtil.decode(it) }
+        )
     }
 }
