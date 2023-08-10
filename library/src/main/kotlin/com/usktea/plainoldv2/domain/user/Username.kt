@@ -7,4 +7,8 @@ import jakarta.persistence.Embeddable
 data class Username(
     @Column(name = "username")
     val value: String
-)
+) {
+    fun afterAt(): String {
+        return value.split("@")[0]
+    }
+}
