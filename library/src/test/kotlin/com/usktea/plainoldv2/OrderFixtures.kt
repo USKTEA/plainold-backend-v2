@@ -47,11 +47,11 @@ fun createOrderRequest(): OrderRequest {
     )
 }
 
-fun createOrder(): Order {
+fun createOrder(username: String = "tjrxo1234@gmail.com"): Order {
     return Order(
         id = 1L,
         orderNumber = OrderNumber("tjrxo1234"),
-        username = Username("tjrxo1234@gmail.com"),
+        username = Username(username),
         orderLines = listOf(
             OrderLine(
                 productId = 1L,

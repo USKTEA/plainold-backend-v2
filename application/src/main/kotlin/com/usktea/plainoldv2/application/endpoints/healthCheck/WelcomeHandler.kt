@@ -6,6 +6,7 @@ import com.usktea.plainoldv2.domain.product.Product
 import com.usktea.plainoldv2.domain.product.repository.ProductRepository
 import com.usktea.plainoldv2.domain.user.User
 import com.usktea.plainoldv2.domain.user.repository.UserRepository
+import com.usktea.plainoldv2.utils.JwtUtil
 import org.springframework.http.MediaType
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -21,6 +22,7 @@ class WelcomeHandler(
     val optionRepository: OptionRepository,
     val userRepository: UserRepository,
     val passwordEncoder: PasswordEncoder,
+    val jwtUtil: JwtUtil
 ) {
     suspend fun welcome(request: ServerRequest): ServerResponse {
         //TODO 지워야한다.
@@ -28,14 +30,16 @@ class WelcomeHandler(
 //            productRepository.save(it)
 //        }
 //
+        optionRepository.deleteAll()
+//
 //        OptionData.fake().also {
 //            optionRepository.save(it)
 //        }
 
-        User.fake().also {
-            it.changePassword(it.password, passwordEncoder)
-            userRepository.save(it)
-        }
+//        User.fake().also {
+//            it.changePassword(it.password, passwordEncoder)
+//            userRepository.save(it)
+//        }
 
         return ok().contentType(MediaType.TEXT_PLAIN).bodyValueAndAwait("welcome")
     }

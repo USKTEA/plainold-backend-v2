@@ -16,6 +16,10 @@ class RefreshTokenRepository(
         TODO("Not yet implemented")
     }
 
+    override suspend fun deleteAll() {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun save(entity: RefreshToken): RefreshToken {
         return entity.also {
             sessionFactory.withSession { session -> session.persist(entity).flatMap { session.flush() } }

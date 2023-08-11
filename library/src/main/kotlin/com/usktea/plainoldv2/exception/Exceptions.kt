@@ -20,3 +20,4 @@ class InvalidNamingException: GlobalException(errorMessage = ErrorMessage.INVALI
 class InvalidPhoneNumberException: GlobalException(errorMessage = ErrorMessage.INVALID_PHONENUMBER.value)
 class InvalidZipCodeException: GlobalException(errorMessage = ErrorMessage.INVALID_ZIPCODE.value)
 class InvalidAddressException: GlobalException(errorMessage = ErrorMessage.INVALID_ADDRESS.value)
+class UserNotExistsException: GlobalException(errorMessage = ErrorMessage.USER_NOT_EXISTS.value)
