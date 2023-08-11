@@ -21,6 +21,10 @@ class CategoryRepository(
         }
     }
 
+    override suspend fun deleteAll() {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun save(entity: Category): Category {
         //TODO
         return entity

@@ -3,6 +3,7 @@ package com.usktea.plainoldv2.domain.user.repository
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.querydsl.expression.count
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMutinyReactiveQueryFactory
+import com.linecorp.kotlinjdsl.spring.data.reactive.query.deleteQuery
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
 import com.usktea.plainoldv2.domain.user.User
 import com.usktea.plainoldv2.domain.user.Username
@@ -19,6 +20,10 @@ class UserRepository(
 ) : BaseRepository<User> {
     override suspend fun findAll(): List<User> {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteAll() {
+        queryFactory.deleteQuery<User> {}
     }
 
     override suspend fun save(user: User): User {

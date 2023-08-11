@@ -32,6 +32,10 @@ class ProductRepository(
         }
     }
 
+    override suspend fun deleteAll() {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun save(entity: Product): Product {
         return entity.also {
             sessionFactory.withSession { session -> session.persist(it).flatMap { session.flush() } }

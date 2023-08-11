@@ -3,6 +3,7 @@ package com.usktea.plainoldv2.domain.option.repository
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.querydsl.from.fetch
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMutinyReactiveQueryFactory
+import com.linecorp.kotlinjdsl.spring.data.reactive.query.deleteQuery
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
 import com.usktea.plainoldv2.domain.option.OptionData
 import com.usktea.plainoldv2.support.BaseRepository
@@ -16,6 +17,10 @@ class OptionRepository(
     private val queryFactory: SpringDataHibernateMutinyReactiveQueryFactory
 ) : BaseRepository<OptionData>{
     override suspend fun findAll(): List<OptionData> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteAll() {
         TODO("Not yet implemented")
     }
 
