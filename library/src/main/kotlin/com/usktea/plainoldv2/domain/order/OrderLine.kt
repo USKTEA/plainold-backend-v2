@@ -1,9 +1,7 @@
 package com.usktea.plainoldv2.domain.order
 
-import jakarta.persistence.AttributeOverride
-import jakarta.persistence.Column
-import jakarta.persistence.Embeddable
-import jakarta.persistence.Embedded
+import com.usktea.plainoldv2.exception.ErrorMessage
+import jakarta.persistence.*
 
 @Embeddable
 data class OrderLine(
@@ -25,7 +23,7 @@ data class OrderLine(
     val totalPrice: Price,
 
     @Embedded
-    val itemOption: ItemOption,
+    val itemOption: ItemOption?,
 ) {
     companion object {
         fun from(orderItem: OrderItemDto): OrderLine {
@@ -36,7 +34,7 @@ data class OrderLine(
                 thumbnailUrl = ThumbnailUrl.from(orderItem.thumbnailUrl),
                 quantity = Quantity.from(orderItem.quantity),
                 totalPrice = Price.from(orderItem.totalPrice),
-                itemOption = ItemOption.from(orderItem.option)
+                itemOption = orderItem.option?.let { ItemOption.from(orderItem.option) } ?: ItemOption.default()
             )
         }
     }
@@ -44,6 +42,7 @@ data class OrderLine(
 
 @Embeddable
 data class ProductName(
+    @Access(AccessType.FIELD)
     val value: String
 ) {
     companion object {
@@ -55,8 +54,13 @@ data class ProductName(
 
 @Embeddable
 data class Quantity(
+    @Access(AccessType.FIELD)
     val amount: Long
 ) {
+    init {
+        require(amount > 0L) { ErrorMessage.INVALID_QUANTITY_AMOUNT.value }
+    }
+
     companion object {
         fun from(amount: Long): Quantity {
             return Quantity(amount)
@@ -64,19 +68,28 @@ data class Quantity(
     }
 }
 
+@Embeddable
 data class ItemOption(
+    @Access(AccessType.FIELD)
     val color: String,
+
+    @Access(AccessType.FIELD)
     val size: String
 ) {
     companion object {
         fun from(option: OrderOptionDto): ItemOption {
             return ItemOption(color = option.color, size = option.size)
         }
+
+        fun default(): ItemOption {
+            return ItemOption(color = "", size = "FREE")
+        }
     }
 }
 
 @Embeddable
 data class ThumbnailUrl(
+    @Access(AccessType.FIELD)
     val value: String
 ) {
     companion object {
@@ -88,8 +101,13 @@ data class ThumbnailUrl(
 
 @Embeddable
 data class Price(
+    @Access(AccessType.FIELD)
     val amount: Long
 ) {
+    init {
+        require(amount >= 0) { ErrorMessage.PRICE_AMOUNT_EXCEPTION.value }
+    }
+
     companion object {
         fun from(amount: Long): Price {
             return Price(amount)

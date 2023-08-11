@@ -1,5 +1,7 @@
 package com.usktea.plainoldv2.domain.order
 
+import com.usktea.plainoldv2.exception.InvalidZipCodeException
+import com.usktea.plainoldv2.utils.RegExpProvider
 import jakarta.persistence.AttributeOverride
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
@@ -54,7 +56,13 @@ data class Address1(
 class ZipCode(
     @Column(name = "zipCode")
     val value: String
-)
+) {
+    init {
+        if (!value.matches(RegExpProvider.zipCode())) {
+            throw InvalidZipCodeException()
+        }
+    }
+}
 
 @Embeddable
 data class Receiver(

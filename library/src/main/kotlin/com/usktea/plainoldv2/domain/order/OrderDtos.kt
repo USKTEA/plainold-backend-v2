@@ -20,7 +20,7 @@ data class OrderItemDto(
     val freeShippingAmount: Long,
     val quantity: Long,
     val totalPrice: Long,
-    val option: OrderOptionDto
+    val option: OrderOptionDto?
 )
 
 data class OrderOptionDto(val size: String, val color: String)

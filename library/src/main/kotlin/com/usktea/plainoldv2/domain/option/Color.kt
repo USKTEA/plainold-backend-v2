@@ -1,6 +1,6 @@
 package com.usktea.plainoldv2.domain.option
 
-import com.usktea.plainoldv2.exception.RGB_VALUE_EXCEPTION
+import com.usktea.plainoldv2.exception.ErrorMessage
 import jakarta.persistence.AttributeOverride
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
@@ -24,6 +24,6 @@ data class Rgb(
     var value: Int
 ) {
     init {
-        require(value in 0..255) { RGB_VALUE_EXCEPTION }
+        require(value in 0..255) { ErrorMessage.RGB_VALUE_EXCEPTION.value }
     }
 }

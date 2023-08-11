@@ -6,7 +6,7 @@ import com.usktea.plainoldv2.domain.user.Username
 
 fun createOrderRequest(): OrderRequest {
     return OrderRequest(
-        username = Username("김뚜루"),
+        username = Username("tjrxo1234@gmail.com"),
         orderLines = listOf(
             OrderLine(
             productId = 1L,
@@ -51,7 +51,7 @@ fun createOrder(): Order {
     return Order(
         id = 1L,
         orderNumber = OrderNumber("tjrxo1234"),
-        username = Username("김뚜루"),
+        username = Username("tjrxo1234@gmail.com"),
         orderLines = listOf(
             OrderLine(
                 productId = 1L,
