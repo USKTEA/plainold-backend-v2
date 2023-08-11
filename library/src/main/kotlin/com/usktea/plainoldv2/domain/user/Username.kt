@@ -1,5 +1,7 @@
 package com.usktea.plainoldv2.domain.user
 
+import com.usktea.plainoldv2.exception.InvalidUsernameException
+import com.usktea.plainoldv2.utils.RegExpProvider
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 
@@ -7,4 +9,15 @@ import jakarta.persistence.Embeddable
 data class Username(
     @Column(name = "username")
     val value: String
-)
+) {
+
+    init {
+        if (!value.matches(RegExpProvider.username())) {
+            throw InvalidUsernameException()
+        }
+    }
+
+    fun afterAt(): String {
+        return value.split("@")[0]
+    }
+}
