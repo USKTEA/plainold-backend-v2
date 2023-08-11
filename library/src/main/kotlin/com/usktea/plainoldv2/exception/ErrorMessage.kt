@@ -20,5 +20,6 @@ enum class ErrorMessage(
     INVALID_QUANTITY_AMOUNT("정확하지 않는 수량입니다"),
     INVALID_ZIPCODE("정확하지 않은 우편번호입니다"),
     INVALID_ADDRESS("정확하지 않은 주소입니다"),
-    USER_NOT_EXISTS("사용자 정보를 찾을 수 없습니다")
+    USER_NOT_EXISTS("사용자 정보를 찾을 수 없습니다"),
+    INVALID_ORDER_ITEM("정확하지 않은 상품 정보입니다")
 }
