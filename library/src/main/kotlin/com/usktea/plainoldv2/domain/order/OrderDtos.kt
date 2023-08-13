@@ -23,9 +23,16 @@ data class OrderItemDto(
     val option: OrderOptionDto?
 )
 
-data class OrderOptionDto(val size: String, val color: String)
+data class OrderOptionDto(
+    val size: String,
+    val color: String
+)
 
-data class OrdererDto(val name: String, val phoneNumber: String, val email: String)
+data class OrdererDto(
+    val name: String,
+    val phoneNumber: String,
+    val email: String
+)
 
 data class ReceiverDto(
     val name: String,
@@ -57,9 +64,16 @@ data class OrderAddressDto(
     }
 }
 
-data class ShippingInformationDto(val receiver: ReceiverDto, val address: OrderAddressDto, val message: String = "")
+data class ShippingInformationDto(
+    val receiver: ReceiverDto,
+    val address: OrderAddressDto,
+    val message: String = ""
+)
 
-data class PaymentDto(val method: String, val payer: String)
+data class PaymentDto(
+    val method: String,
+    val payer: String
+)
 
 data class OrderRequest(
     val username: Username,

@@ -22,3 +22,4 @@ class InvalidZipCodeException: GlobalException(errorMessage = ErrorMessage.INVAL
 class InvalidAddressException: GlobalException(errorMessage = ErrorMessage.INVALID_ADDRESS.value)
 class UserNotExistsException: GlobalException(errorMessage = ErrorMessage.USER_NOT_EXISTS.value)
 class InvalidOrderItemException: GlobalException(errorMessage = ErrorMessage.INVALID_ORDER_ITEM.value)
+class PaymentProviderNotFoundException: GlobalException(errorMessage = ErrorMessage.PAYMENT_PROVIDER_NOT_FOUND.value)
