@@ -5,6 +5,7 @@ import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMut
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.listQuery
 import com.usktea.plainoldv2.domain.category.Category
 import com.usktea.plainoldv2.support.BaseRepository
+import io.smallrye.mutiny.coroutines.awaitSuspending
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory
 import org.springframework.stereotype.Repository
 
@@ -26,7 +27,9 @@ class CategoryRepository(
     }
 
     override suspend fun save(entity: Category): Category {
-        //TODO
-        return entity
+        return entity.also {
+            sessionFactory.withSession { session -> session.persist(it).flatMap { session.flush() } }
+                .awaitSuspending()
+        }
     }
 }

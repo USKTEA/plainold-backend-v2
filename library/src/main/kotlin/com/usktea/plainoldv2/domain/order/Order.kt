@@ -28,7 +28,7 @@ class Order(
     val payment: Payment,
 
     @Enumerated(EnumType.STRING)
-    val status: OrderStatus,
+    var status: OrderStatus,
 
     @Embedded
     @AttributeOverride(name = "amount", column = Column(name = "shippingFee"))
@@ -38,6 +38,11 @@ class Order(
     @AttributeOverride(name = "amount", column = Column(name = "cost"))
     val cost: Price,
 ) : BaseEntity(id) {
+    init {
+        if (this.payment.method == PaymentMethod.KAKAOPAY) {
+            this.status = OrderStatus.PREPARING
+        }
+    }
     companion object {
         fun of(oderNumber: OrderNumber, orderRequest: OrderRequest): Order {
             return Order(
