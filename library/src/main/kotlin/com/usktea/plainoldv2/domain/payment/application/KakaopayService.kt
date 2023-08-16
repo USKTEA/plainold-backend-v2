@@ -5,6 +5,9 @@ import com.usktea.plainoldv2.domain.payment.repository.PrePaymentRepository
 import com.usktea.plainoldv2.domain.user.User
 import com.usktea.plainoldv2.domain.user.Username
 import com.usktea.plainoldv2.domain.user.repository.UserRepository
+import com.usktea.plainoldv2.exception.KakaopayApproveException
+import com.usktea.plainoldv2.exception.KakaopayReadyException
+import com.usktea.plainoldv2.exception.PrePaymentNotExistsException
 import com.usktea.plainoldv2.exception.UserNotExistsException
 import com.usktea.plainoldv2.properties.KakaopayProperties
 import org.springframework.http.MediaType
@@ -30,26 +33,73 @@ class KakaopayService(
         val user = userRepository.findByUsernameOrNull(username) ?: throw UserNotExistsException()
         val partnerOrderId = getPartnerOrderId()
 
-        val response = client.post()
-            .uri(properties.readyUri)
-            .header("Authorization", "KakaoAK ${properties.adminKey}")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .bodyValue(readyRequest(user, partnerOrderId, orderItems))
-            .retrieve()
-            .awaitBody<KakaopayReadyResponse>()
+        try {
+            val response = client.post()
+                .uri(properties.readyUri)
+                .header("Authorization", "KakaoAK ${properties.adminKey}")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .bodyValue(readyRequest(user, partnerOrderId, orderItems))
+                .retrieve()
+                .awaitBody<KakaopayReadyResponse>()
 
-        val prePayment = PrePayment(
-            userId = user.id,
-            tid = response.tid,
-            orderItems = orderItems.map { OrderLine.from(it) }
-        ).also { prePaymentRepository.save(it) }
+            val prePayment = PrePayment(
+                userId = user.id,
+                tid = response.tid,
+                orderItems = orderItems.map { OrderLine.from(it) }
+            ).also { prePaymentRepository.save(it) }
 
-        return PaymentReadyResponseDto(
-            paymentProvider = properties.paymentProvider,
-            prePaymentId = prePayment.id,
-            partnerOrderId = partnerOrderId,
-            redirectUrl = response.next_redirect_pc_url
-        )
+            return PaymentReadyResponseDto(
+                paymentProvider = properties.paymentProvider,
+                prePaymentId = prePayment.id,
+                partnerOrderId = partnerOrderId,
+                redirectUrl = response.next_redirect_pc_url
+            )
+        } catch (exception: Exception) {
+            throw KakaopayReadyException()
+        }
+    }
+
+    override suspend fun approve(username: Username, paymentApproveRequest: PaymentApproveRequest): String {
+        val user = userRepository.findByUsernameOrNull(username) ?: throw UserNotExistsException()
+        val prePayment = prePaymentRepository.findByIdOrNull(id = paymentApproveRequest.prePaymentId)
+            ?: throw PrePaymentNotExistsException()
+
+        require(prePayment.isUnused()) { "이미 사용된 PrePayment 정보입니다" }
+
+        try {
+            val response = client.post()
+                .uri(properties.approveUri)
+                .header("Authorization", "KakaoAK ${properties.adminKey}")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .bodyValue(approveRequest(user.id, prePayment.tid, paymentApproveRequest))
+                .retrieve()
+                .awaitBody<KakaopayApproveResponse>()
+
+            prePaymentRepository.updateStatus(id = prePayment.id, status = PrePaymentStatus.USED)
+
+            return response.aid
+        } catch (exception: Exception) {
+            println(exception)
+            prePaymentRepository.updateStatus(id = prePayment.id, status = PrePaymentStatus.FAILED)
+
+            throw KakaopayApproveException()
+        }
+    }
+
+    private fun approveRequest(
+        userId: Long,
+        tid: String,
+        paymentApproveRequest: PaymentApproveRequest
+    ): MultiValueMap<String, String> {
+        val formData = LinkedMultiValueMap<String, String>()
+
+        formData["cid"] = properties.cid
+        formData["tid"] = tid
+        formData["partner_order_id"] = paymentApproveRequest.partnerOrderId
+        formData["partner_user_id"] = userId.toString()
+        formData["pg_token"] = paymentApproveRequest.pgToken
+
+        return formData
     }
 
     private fun readyRequest(

@@ -19,9 +19,12 @@ class PrePayment(
 
     @Enumerated(EnumType.STRING)
     val status: PrePaymentStatus = PrePaymentStatus.UNUSED
-) : BaseEntity()
-
+) : BaseEntity() {
+    fun isUnused(): Boolean {
+        return this.status == PrePaymentStatus.UNUSED
+    }
+}
 
 enum class PrePaymentStatus{
-    UNUSED, USED
+    UNUSED, USED, FAILED
 }

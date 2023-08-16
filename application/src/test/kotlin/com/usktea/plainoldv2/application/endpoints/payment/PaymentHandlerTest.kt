@@ -19,6 +19,10 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 const val USERNAME = "tjrxo1234@gmail.com"
 const val PROVIDER = "KAKAO"
+const val PG_TOKEN = "TOKEN"
+const val PARTNER_ORDER_ID = "ID"
+const val PRE_PAYMENT_ID = "1"
+const val APPROVE_CODE = "APPROVE"
 
 @ActiveProfiles("test")
 @WebFluxTest(PaymentRouter::class, PaymentHandler::class)
@@ -54,6 +58,22 @@ class PaymentHandlerTest {
             .expectBody()
             .jsonPath("$.prePaymentId").exists()
             .jsonPath("$.redirectUrl").exists()
+    }
+
+    @Test
+    fun `정확한 결제 승인 요청이 들어오면 결제가 승인된다`() {
+        val token = jwtUtil.encode(USERNAME)
+
+        coEvery { paymentServiceFactory[PROVIDER] } returns kakaopayService
+        coEvery { kakaopayService.approve(any(), any()) } returns APPROVE_CODE
+
+        client.mutateWith(mockUser()).get()
+            .uri("/payments?provider=$PROVIDER&pgToken=$PG_TOKEN&prePaymentId=$PRE_PAYMENT_ID&partnerOrderId=&$PARTNER_ORDER_ID")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody()
+            .jsonPath("$.approveCode").isEqualTo(APPROVE_CODE)
     }
 }
 

@@ -12,6 +12,28 @@ data class PaymentReadyResponseDto(
     val redirectUrl: String
 )
 
+data class PaymentApproveRequest(
+    val provider: String,
+    val pgToken: String,
+    val prePaymentId: Long,
+    val partnerOrderId: String,
+) {
+    companion object {
+        fun from(provider: String, pgToken: String, prePaymentId: Long, partnerOrderId: String): PaymentApproveRequest {
+            return PaymentApproveRequest(
+                provider = provider,
+                pgToken = pgToken,
+                prePaymentId = prePaymentId,
+                partnerOrderId = partnerOrderId
+            )
+        }
+    }
+}
+
+data class PaymentApproveResultDto(
+    val approveCode: String
+)
+
 data class OrderItemDto(
     val productId: Long,
     val price: Long,

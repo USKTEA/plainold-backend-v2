@@ -12,6 +12,7 @@ class PaymentRouter {
     fun paymentRouetes(handler: PaymentHandler) = coRouter {
         path(context).nest {
             POST("", handler::ready)
+            GET("", handler::approve)
         }
     }
 }

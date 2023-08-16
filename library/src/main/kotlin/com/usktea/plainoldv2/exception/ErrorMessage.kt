@@ -22,5 +22,8 @@ enum class ErrorMessage(
     INVALID_ADDRESS("정확하지 않은 주소입니다"),
     USER_NOT_EXISTS("사용자 정보를 찾을 수 없습니다"),
     INVALID_ORDER_ITEM("정확하지 않은 상품 정보입니다"),
-    PAYMENT_PROVIDER_NOT_FOUND("Payment Provider를 가져오지 못 했습니다")
+    PAYMENT_PROVIDER_NOT_FOUND("Payment Provider를 가져오지 못 했습니다"),
+    PREPAYMENT_NOT_EXISTS("PrePayment 정보를 찾을 수 없습니다"),
+    KAKAOPAY_READY("카카오페이 서버에 결제 준비 요청 진행 중 에러가 발생했습니다"),
+    KAKAOPAY_APPROVE("카카오페이 서버에서 결제 승인 요청 진행 중 에러가 발생했습니다")
 }
