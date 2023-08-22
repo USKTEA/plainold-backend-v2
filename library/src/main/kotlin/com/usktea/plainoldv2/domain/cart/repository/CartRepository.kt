@@ -1,17 +1,20 @@
 package com.usktea.plainoldv2.domain.cart.repository
 
 import com.linecorp.kotlinjdsl.querydsl.expression.col
+import com.linecorp.kotlinjdsl.querydsl.from.fetch
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMutinyReactiveQueryFactory
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
+import com.linecorp.kotlinjdsl.spring.reactive.singleQuery
 import com.usktea.plainoldv2.domain.cart.Cart
+import com.usktea.plainoldv2.domain.cart.CartItem
 import com.usktea.plainoldv2.support.BaseRepository
 import io.smallrye.mutiny.coroutines.awaitSuspending
-import org.hibernate.reactive.mutiny.Mutiny.SessionFactory
+import org.hibernate.reactive.mutiny.Mutiny
 import org.springframework.stereotype.Repository
 
 @Repository
 class CartRepository(
-    private val sessionFactory: SessionFactory,
+    private val sessionFactory: Mutiny.SessionFactory,
     private val queryFactory: SpringDataHibernateMutinyReactiveQueryFactory
 ) : BaseRepository<Cart> {
     suspend fun findByUserIdOrNull(userId: Long): Cart? {
@@ -19,6 +22,7 @@ class CartRepository(
             return queryFactory.singleQuery<Cart> {
                 select(entity(Cart::class))
                 from(entity(Cart::class))
+                fetch(Cart::cartItems)
                 where(col(Cart::userId).equal(userId))
             }
         } catch (exception: Exception) {
@@ -38,6 +42,25 @@ class CartRepository(
         return entity.also {
             sessionFactory.withSession { session -> session.persist(it).flatMap { session.flush() } }
                 .awaitSuspending()
+        }
+    }
+
+    suspend fun update(cartId: Long, cartItems: List<CartItem>): Cart {
+        return queryFactory.transactionWithFactory { queryFactory ->
+            val found = queryFactory.singleQuery<Cart> {
+                select(entity(Cart::class))
+                fetch(Cart::cartItems)
+                from(entity(Cart::class))
+                where(col(Cart::id).equal(cartId))
+            }
+
+            found.addItems(cartItems)
+
+            sessionFactory.withSession { session ->
+                session.merge(found).flatMap { session.flush() }
+            }
+
+            found
         }
     }
 }

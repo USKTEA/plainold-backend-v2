@@ -5,10 +5,10 @@ import com.usktea.plainoldv2.domain.cart.repository.CartRepository
 import com.usktea.plainoldv2.domain.user.repository.UserRepository
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.equals.shouldBeEqual
+import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -46,20 +46,41 @@ class CartServiceTest {
     }
 
     @Test
-    fun `사용자 카트가 생성되지 않았다면 사용자 카트를 생성한다`() = runTest {
+    fun `사용자 카트가 생성되지 않았다면 빈 배열을 반환한다`() = runTest {
         val username = createUsername(USERNAME)
         val password = createPassword(PASSWORD)
 
         val user = createUser(username, password)
-        val cart = createCart(userId = user.id)
 
         coEvery { userRepository.findByUsernameOrNull(username) } returns user
         coEvery { cartRepository.findByUserIdOrNull(user.id) } returns null
-        coEvery { cartRepository.save(cart) } returns cart
 
-        cartService.getCartItems(username)
+        val cartItems = cartService.getCartItems(username)
 
-        coVerify(exactly = 1) { cartService.createCart(user.id) }
-        coVerify(exactly = 1) { cartRepository.save(cart) }
+        cartItems shouldHaveSize 0
+    }
+
+    @Test
+    fun `사용자 카트에 상품을 추가한다`() = runTest {
+        val username = createUsername(USERNAME)
+        val password = createPassword(PASSWORD)
+        val user = createUser(username, password)
+
+        val cart = createCart(userId = user.id, cartItems = mutableListOf())
+        val cartItem = createCartItem()
+        val cartItems = mutableListOf(cartItem)
+        val updated = createCart(userId = user.id, cartItems = cartItems)
+
+        coEvery { userRepository.findByUsernameOrNull(username) } returns user
+        coEvery { cartRepository.findByUserIdOrNull(user.id) } returns cart
+        coEvery { cartRepository.update(any(), any()) } returns updated
+
+        cart.isEmpty() shouldBe true
+
+        cartService.addCartItems(username = username, cartItems = cartItems)
+
+        coVerify(exactly = 1) { cartRepository.update(any(), any()) }
+        updated.isEmpty() shouldBe false
+        updated.countItems() shouldBe 1
     }
 }

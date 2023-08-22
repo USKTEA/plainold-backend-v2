@@ -43,3 +43,11 @@ data class ItemOptionDto(
         }
     }
 }
+
+data class AddCartItemRequest(
+    val items: List<CartItemDto>
+)
+
+data class AddCartItemResult(
+    val counts: Int
+)
