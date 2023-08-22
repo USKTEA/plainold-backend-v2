@@ -5,7 +5,6 @@ import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMut
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.updateQuery
 import com.usktea.plainoldv2.domain.payment.PrePayment
-import com.usktea.plainoldv2.domain.payment.PrePaymentStatus
 import com.usktea.plainoldv2.support.BaseRepository
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory
@@ -43,10 +42,10 @@ class PrePaymentRepository(
         }
     }
 
-    suspend fun updateStatus(id: Long, status: PrePaymentStatus) {
+    suspend fun updateStatus(prePayment: PrePayment) {
         queryFactory.updateQuery<PrePayment> {
-            where(col(PrePayment::id).equal(id))
-            setParams(col(PrePayment::status) to status)
+            where(col(PrePayment::id).equal(prePayment.id))
+            setParams(col(PrePayment::status) to prePayment.status)
         }
     }
 }

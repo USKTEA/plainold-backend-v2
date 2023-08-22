@@ -12,6 +12,7 @@ class CartRouter {
     fun cartRoutes(handler: CartHandler) = coRouter {
         path(context).nest {
             GET("", handler::getItems)
+            POST("", handler::addItems)
         }
     }
 }

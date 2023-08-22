@@ -75,12 +75,14 @@ class KakaopayService(
                 .retrieve()
                 .awaitBody<KakaopayApproveResponse>()
 
-            prePaymentRepository.updateStatus(id = prePayment.id, status = PrePaymentStatus.USED)
+            prePayment.toStatus(PrePaymentStatus.USED)
+            prePaymentRepository.updateStatus(prePayment)
 
             return response.aid
         } catch (exception: Exception) {
-            println(exception)
-            prePaymentRepository.updateStatus(id = prePayment.id, status = PrePaymentStatus.FAILED)
+
+            prePayment.toStatus(PrePaymentStatus.FAILED)
+            prePaymentRepository.updateStatus(prePayment)
 
             throw KakaopayApproveException()
         }

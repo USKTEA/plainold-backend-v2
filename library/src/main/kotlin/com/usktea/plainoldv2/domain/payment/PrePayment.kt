@@ -18,10 +18,14 @@ class PrePayment(
     val orderItems: List<OrderLine>,
 
     @Enumerated(EnumType.STRING)
-    val status: PrePaymentStatus = PrePaymentStatus.UNUSED
+    var status: PrePaymentStatus = PrePaymentStatus.UNUSED
 ) : BaseEntity() {
     fun isUnused(): Boolean {
         return this.status == PrePaymentStatus.UNUSED
+    }
+
+    fun toStatus(status: PrePaymentStatus) {
+        this.status = status
     }
 }
 

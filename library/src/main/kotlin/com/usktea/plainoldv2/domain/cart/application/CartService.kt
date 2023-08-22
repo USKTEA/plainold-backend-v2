@@ -12,15 +12,37 @@ import org.springframework.stereotype.Service
 class CartService(
     private val userRepository: UserRepository,
     private val cartRepository: CartRepository
-) : GetCartItemUseCase, CreateCartUseCase {
+) : GetCartItemUseCase, CreateCartUseCase, AddCartItemUseCase {
     override suspend fun getCartItems(username: Username): List<CartItem> {
         val user = userRepository.findByUsernameOrNull(username) ?: throw UserNotExistsException()
-        val cart = cartRepository.findByUserIdOrNull(user.id) ?: createCart(userId = user.id)
+        val cart = cartRepository.findByUserIdOrNull(user.id) ?: return mutableListOf()
 
         return cart.cartItems
     }
 
     override suspend fun createCart(userId: Long): Cart {
         return Cart(userId = userId).also { cartRepository.save(it) }
+    }
+
+    override suspend fun addCartItems(username: Username, cartItems: List<CartItem>): Int {
+        val user = userRepository.findByUsernameOrNull(username) ?: throw UserNotExistsException()
+        val cart = cartRepository.findByUserIdOrNull(user.id)
+
+        if (cart == null) {
+            val cart = Cart(userId = user.id)
+
+            cart.addItems(cartItems)
+
+            cartRepository.save(cart)
+
+            return cart.countItems()
+        }
+
+        val updated = cartRepository.update(
+            cartId = cart.id,
+            cartItems = cartItems
+        )
+
+        return updated.countItems()
     }
 }
