@@ -6,7 +6,6 @@ import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMut
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
 import com.linecorp.kotlinjdsl.spring.reactive.singleQuery
 import com.usktea.plainoldv2.domain.cart.Cart
-import com.usktea.plainoldv2.domain.cart.CartItem
 import com.usktea.plainoldv2.support.BaseRepository
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import org.hibernate.reactive.mutiny.Mutiny
@@ -45,22 +44,24 @@ class CartRepository(
         }
     }
 
-    suspend fun update(cartId: Long, cartItems: List<CartItem>): Cart {
+    suspend fun update(cart: Cart) {
         return queryFactory.transactionWithFactory { queryFactory ->
             val found = queryFactory.singleQuery<Cart> {
                 select(entity(Cart::class))
                 fetch(Cart::cartItems)
                 from(entity(Cart::class))
-                where(col(Cart::id).equal(cartId))
+                where(col(Cart::id).equal(cart.id))
             }
 
-            found.addItems(cartItems)
+            found.updateTo(cart)
 
             sessionFactory.withSession { session ->
                 session.merge(found).flatMap { session.flush() }
             }
-
-            found
         }
     }
+}
+
+private fun Cart.updateTo(cart: Cart) {
+    this.cartItems = cart.cartItems
 }

@@ -1,7 +1,7 @@
 package com.usktea.plainoldv2.domain.cart
 
+import com.usktea.plainoldv2.exception.CartItemNotFoundException
 import com.usktea.plainoldv2.support.BaseEntity
-import jakarta.persistence.CascadeType
 import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
 
@@ -12,7 +12,7 @@ class Cart(
     val userId: Long,
 
     @ElementCollection
-    val cartItems: MutableList<CartItem> = mutableListOf()
+    var cartItems: MutableList<CartItem> = mutableListOf()
 ) : BaseEntity(id) {
     fun isEmpty(): Boolean {
         return this.cartItems.isEmpty()
@@ -28,17 +28,33 @@ class Cart(
 
             when (found == null) {
                 true -> this.cartItems.add(it)
-                false -> updateItem(found, it)
+                false -> increaseQuantity(found, it)
             }
         }
     }
 
-    private fun updateItem(found: CartItem, current: CartItem) {
+    fun updateItems(items: List<CartItem>): List<Long> {
+        return items.map {
+            val found = findSameItem(it) ?: throw CartItemNotFoundException()
+
+            updateQuantity(found, it)
+
+            it.productId
+        }
+    }
+
+    private fun updateQuantity(found: CartItem, current: CartItem) {
+        val index = this.cartItems.indexOf(found)
+        val updated = found.updateQuantity(current.quantity)
+
+        this.cartItems[index] = updated
+    }
+
+    private fun increaseQuantity(found: CartItem, current: CartItem) {
         val index = this.cartItems.indexOf(found)
         val increased = found.increaseQuantity(current.quantity)
 
-        this.cartItems.removeAt(index)
-        this.cartItems.add(index, increased)
+        this.cartItems[index] = increased
     }
 
     fun firstItem(): CartItem {
@@ -47,5 +63,9 @@ class Cart(
 
     private fun findSameItem(item: CartItem): CartItem? {
         return this.cartItems.firstOrNull { it.checkIsSame(item) }
+    }
+
+    companion object {
+        val NULL = Cart(userId = 0L, cartItems = mutableListOf())
     }
 }

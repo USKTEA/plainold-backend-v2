@@ -13,6 +13,7 @@ class CartRouter {
         path(context).nest {
             GET("", handler::getItems)
             POST("", handler::addItems)
+            PATCH("", handler::updateItems)
         }
     }
 }

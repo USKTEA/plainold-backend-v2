@@ -42,6 +42,26 @@ class CartTest {
         cart.countItems() shouldBe 1
         cart.firstItem().quantity shouldBe Quantity(2L)
     }
+
+    @Test
+    fun `카트에 있는 상품의 수량을 변경할 수 있다`() {
+        val origin = createCartItem(
+            productId = 1L,
+            quantity = 1L
+        )
+        val cart = createCart(USER_ID, mutableListOf(origin))
+        val other = createCartItem(
+            productId = 1L,
+            quantity = 3L
+        )
+
+        cart.firstItem().quantity shouldBe Quantity(1L)
+
+        val updatedIds = cart.updateItems(items = listOf(other))
+
+        updatedIds shouldBe listOf(1L)
+        cart.firstItem().quantity shouldBe Quantity(3L)
+    }
 }
 
 

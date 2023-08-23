@@ -59,4 +59,26 @@ class CartItemTest {
 
         increased.quantity shouldBe Quantity(3L)
     }
+
+    @Test
+    fun `수량이 변경된 CartItem을 반환한다`() {
+        val cartItem = CartItem(
+            productId = 1L,
+            price = Price(1L),
+            productName = ProductName("T-shirts"),
+            thumbnailUrl = ThumbnailUrl("1"),
+            shippingFee = Price(1L),
+            freeShippingAmount = Price(1L),
+            quantity = Quantity(1L),
+            itemOption = ItemOption(
+                color = "RED",
+                size = Size.XL
+            )
+        )
+
+        val two = Quantity(2L)
+        val updated = cartItem.updateQuantity(two)
+
+        updated.quantity shouldBe two
+    }
 }

@@ -30,4 +30,14 @@ class CartHandler(
 
         return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(AddCartItemResult(counts))
     }
+
+    suspend fun updateItems(request: ServerRequest): ServerResponse {
+        val username = request.attributeOrNull("username") as? Username ?: throw RequestAttributeNotFoundException()
+        val updateCartItemRequest =
+            request.awaitBodyOrNull<UpdateCartItemRequest>() ?: throw RequestBodyNotFoundException()
+        val cartItems = updateCartItemRequest.items.map { CartItem.from(it) }
+        val updatedIds = cartService.updateItems(username = username, cartItems = cartItems)
+
+        return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(UpdateCartItemResult(updatedIds))
+    }
 }
