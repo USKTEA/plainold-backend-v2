@@ -2,15 +2,15 @@ package com.usktea.plainoldv2
 
 import com.usktea.plainoldv2.domain.cart.*
 
-fun createCartItem(): CartItem {
+fun createCartItem(productId: Long = 1L, quantity: Long = 1L): CartItem {
     return CartItem(
-        productId = 1L,
+        productId = productId,
         price = Price(1L),
         productName = ProductName("T-Shirts"),
         thumbnailUrl = ThumbnailUrl("1"),
         shippingFee = Price(1L),
         freeShippingAmount = Price(1L),
-        quantity = Quantity(1L),
+        quantity = Quantity(quantity),
         itemOption = ItemOption(
             size = Size.M,
             color = "RED"

@@ -51,3 +51,11 @@ data class AddCartItemRequest(
 data class AddCartItemResult(
     val counts: Int
 )
+
+data class UpdateCartItemRequest(
+    val items: List<CartItemDto>
+)
+
+data class UpdateCartItemResult(
+    val updated: List<Long>
+)

@@ -25,5 +25,7 @@ enum class ErrorMessage(
     PAYMENT_PROVIDER_NOT_FOUND("Payment Provider를 가져오지 못 했습니다"),
     PREPAYMENT_NOT_EXISTS("PrePayment 정보를 찾을 수 없습니다"),
     KAKAOPAY_READY("카카오페이 서버에 결제 준비 요청 진행 중 에러가 발생했습니다"),
-    KAKAOPAY_APPROVE("카카오페이 서버에서 결제 승인 요청 진행 중 에러가 발생했습니다")
+    KAKAOPAY_APPROVE("카카오페이 서버에서 결제 승인 요청 진행 중 에러가 발생했습니다"),
+    CART_NOT_FOUND("사용자 장바구니 정보를 찾을 수 없습니다"),
+    CART_ITEM_NOT_FOUND("사용자 장바구니에서 상품을 찾을 수 없습니다")
 }

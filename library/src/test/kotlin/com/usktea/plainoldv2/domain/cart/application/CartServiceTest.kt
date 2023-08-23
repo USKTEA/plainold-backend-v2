@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles
 
 const val USERNAME = "tjrxo1234@gmail.com"
 const val PASSWORD = "Password1234!"
+const val PRODUCT_ID = 1L
 
 @ActiveProfiles("test")
 class CartServiceTest {
@@ -73,14 +74,34 @@ class CartServiceTest {
 
         coEvery { userRepository.findByUsernameOrNull(username) } returns user
         coEvery { cartRepository.findByUserIdOrNull(user.id) } returns cart
-        coEvery { cartRepository.update(any(), any()) } returns updated
+        coEvery { cartRepository.update(cart) } returns Unit
 
         cart.isEmpty() shouldBe true
 
         cartService.addCartItems(username = username, cartItems = cartItems)
 
-        coVerify(exactly = 1) { cartRepository.update(any(), any()) }
+        coVerify(exactly = 1) { cartRepository.update(cart) }
         updated.isEmpty() shouldBe false
         updated.countItems() shouldBe 1
+    }
+
+    @Test
+    fun `사용자 카트의 상품을 변경한다`() = runTest {
+        val username = createUsername(USERNAME)
+        val password = createPassword(PASSWORD)
+        val user = createUser(username, password)
+        val cartItem = createCartItem(PRODUCT_ID)
+        val cartItems = listOf(cartItem)
+        val cart = createCart(userId = user.id, cartItems = mutableListOf(cartItem))
+
+        coEvery { userRepository.findByUsernameOrNull(username) } returns user
+        coEvery { cartRepository.findByUserIdOrNull(user.id) } returns cart
+        coEvery { cartRepository.update(cart) } returns Unit
+
+        val updatedIds = cartService.updateItems(username = username, cartItems = cartItems)
+
+        coVerify(exactly = 1) { cartRepository.update(cart) }
+        updatedIds shouldHaveSize 1
+        updatedIds.first() shouldBe PRODUCT_ID
     }
 }

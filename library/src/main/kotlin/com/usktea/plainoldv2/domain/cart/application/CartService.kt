@@ -5,6 +5,7 @@ import com.usktea.plainoldv2.domain.cart.CartItem
 import com.usktea.plainoldv2.domain.cart.repository.CartRepository
 import com.usktea.plainoldv2.domain.user.Username
 import com.usktea.plainoldv2.domain.user.repository.UserRepository
+import com.usktea.plainoldv2.exception.CartNotFoundException
 import com.usktea.plainoldv2.exception.UserNotExistsException
 import org.springframework.stereotype.Service
 
@@ -12,10 +13,10 @@ import org.springframework.stereotype.Service
 class CartService(
     private val userRepository: UserRepository,
     private val cartRepository: CartRepository
-) : GetCartItemUseCase, CreateCartUseCase, AddCartItemUseCase {
+) : GetCartItemUseCase, CreateCartUseCase, AddCartItemUseCase, UpdateCartItemUseCase {
     override suspend fun getCartItems(username: Username): List<CartItem> {
         val user = userRepository.findByUsernameOrNull(username) ?: throw UserNotExistsException()
-        val cart = cartRepository.findByUserIdOrNull(user.id) ?: return mutableListOf()
+        val cart = cartRepository.findByUserIdOrNull(user.id) ?: Cart.NULL
 
         return cart.cartItems
     }
@@ -38,11 +39,20 @@ class CartService(
             return cart.countItems()
         }
 
-        val updated = cartRepository.update(
-            cartId = cart.id,
-            cartItems = cartItems
-        )
+        cart.addItems(cartItems)
+        cartRepository.update(cart)
 
-        return updated.countItems()
+        return cart.countItems()
+    }
+
+    override suspend fun updateItems(username: Username, cartItems: List<CartItem>): List<Long> {
+        val user = userRepository.findByUsernameOrNull(username) ?: throw UserNotExistsException()
+        val cart = cartRepository.findByUserIdOrNull(user.id) ?: throw CartNotFoundException()
+
+        val updatedIds = cart.updateItems(items = cartItems)
+
+        cartRepository.update(cart)
+
+        return updatedIds
     }
 }

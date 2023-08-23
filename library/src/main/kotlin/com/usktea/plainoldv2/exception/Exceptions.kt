@@ -26,3 +26,5 @@ class PaymentProviderNotFoundException: GlobalException(errorMessage = ErrorMess
 class PrePaymentNotExistsException: GlobalException(errorMessage = ErrorMessage.PREPAYMENT_NOT_EXISTS.value)
 class KakaopayReadyException: GlobalException(errorMessage = ErrorMessage.KAKAOPAY_READY.value)
 class KakaopayApproveException: GlobalException(errorMessage = ErrorMessage.KAKAOPAY_APPROVE.value)
+class CartItemNotFoundException: GlobalException(errorMessage = ErrorMessage.CART_ITEM_NOT_FOUND.value)
+class CartNotFoundException: GlobalException(errorMessage = ErrorMessage.CART_NOT_FOUND.value)

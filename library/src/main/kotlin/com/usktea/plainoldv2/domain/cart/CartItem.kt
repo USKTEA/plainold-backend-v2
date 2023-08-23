@@ -50,6 +50,19 @@ data class CartItem(
         )
     }
 
+    fun updateQuantity(quantity: Quantity): CartItem {
+        return CartItem(
+            productId = productId,
+            price = price,
+            productName = productName,
+            thumbnailUrl = thumbnailUrl,
+            shippingFee = shippingFee,
+            freeShippingAmount = freeShippingAmount,
+            quantity = quantity,
+            itemOption = itemOption
+        )
+    }
+
     companion object {
         fun from(cartItemDto: CartItemDto): CartItem {
             return CartItem(
