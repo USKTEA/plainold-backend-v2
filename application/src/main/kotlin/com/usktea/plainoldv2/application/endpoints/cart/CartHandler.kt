@@ -40,4 +40,14 @@ class CartHandler(
 
         return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(UpdateCartItemResult(updatedIds))
     }
+
+    suspend fun deleteItems(request: ServerRequest): ServerResponse {
+        val username = request.attributeOrNull("username") as? Username ?: throw RequestAttributeNotFoundException()
+        val deleteCartItemRequest =
+            request.awaitBodyOrNull<DeleteCartItemRequest>() ?: throw RequestBodyNotFoundException()
+        val cartItems = deleteCartItemRequest.items.map { CartItem.from(it) }
+        val deletedIds = cartService.deleteItems(username = username, cartItems = cartItems)
+
+        return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(DeleteCartItemResult(deletedIds))
+    }
 }

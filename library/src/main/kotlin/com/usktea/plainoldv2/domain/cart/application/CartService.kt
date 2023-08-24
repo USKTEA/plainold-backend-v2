@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 class CartService(
     private val userRepository: UserRepository,
     private val cartRepository: CartRepository
-) : GetCartItemUseCase, CreateCartUseCase, AddCartItemUseCase, UpdateCartItemUseCase {
+) : GetCartItemUseCase, CreateCartUseCase, AddCartItemUseCase, UpdateCartItemUseCase, DeleteCartItemUseCase {
     override suspend fun getCartItems(username: Username): List<CartItem> {
         val user = userRepository.findByUsernameOrNull(username) ?: throw UserNotExistsException()
         val cart = cartRepository.findByUserIdOrNull(user.id) ?: Cart.NULL
@@ -54,5 +54,16 @@ class CartService(
         cartRepository.update(cart)
 
         return updatedIds
+    }
+
+    override suspend fun deleteItems(username: Username, cartItems: List<CartItem>): List<Long> {
+        val user = userRepository.findByUsernameOrNull(username) ?: throw UserNotExistsException()
+        val cart = cartRepository.findByUserIdOrNull(user.id) ?: throw CartNotFoundException()
+
+        val deletedIds = cart.deleteItems(items = cartItems)
+
+        cartRepository.update(cart)
+
+        return deletedIds
     }
 }

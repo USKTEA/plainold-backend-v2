@@ -8,6 +8,7 @@ import com.linecorp.kotlinjdsl.spring.reactive.singleQuery
 import com.usktea.plainoldv2.domain.cart.Cart
 import com.usktea.plainoldv2.support.BaseRepository
 import io.smallrye.mutiny.coroutines.awaitSuspending
+import jakarta.persistence.NoResultException
 import org.hibernate.reactive.mutiny.Mutiny
 import org.springframework.stereotype.Repository
 
@@ -39,8 +40,24 @@ class CartRepository(
 
     override suspend fun save(entity: Cart): Cart {
         return entity.also {
-            sessionFactory.withSession { session -> session.persist(it).flatMap { session.flush() } }
-                .awaitSuspending()
+            queryFactory.transactionWithFactory { queryFactory ->
+                try {
+                    val found = queryFactory.singleQuery<Cart> {
+                        select(entity(Cart::class))
+                        from(entity(Cart::class))
+                        where(col(Cart::userId).equal(entity.userId))
+                    }
+
+                    found.updateTo(entity)
+
+                    sessionFactory.withSession { session ->
+                        session.merge(found).flatMap { session.flush() }
+                    }
+                } catch (exception: NoResultException) {
+                    sessionFactory.withSession { session -> session.persist(entity).flatMap { session.flush() } }
+                        .awaitSuspending()
+                }
+            }
         }
     }
 

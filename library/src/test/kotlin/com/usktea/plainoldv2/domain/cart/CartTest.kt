@@ -2,6 +2,7 @@ package com.usktea.plainoldv2.domain.cart
 
 import com.usktea.plainoldv2.createCart
 import com.usktea.plainoldv2.createCartItem
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -61,6 +62,20 @@ class CartTest {
 
         updatedIds shouldBe listOf(1L)
         cart.firstItem().quantity shouldBe Quantity(3L)
+    }
+
+    @Test
+    fun `카트에 있는 상품을 제거할 수 있다`() {
+        val cartItem = createCartItem(
+            productId = 1L,
+            quantity = 1L
+        )
+        val cart = createCart(USER_ID, mutableListOf(cartItem))
+
+        val deletedIds = cart.deleteItems(listOf(cartItem))
+
+        deletedIds shouldBe listOf(1L)
+        cart.cartItems shouldHaveSize 0
     }
 }
 

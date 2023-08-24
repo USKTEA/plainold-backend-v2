@@ -65,6 +65,16 @@ class Cart(
         return this.cartItems.firstOrNull { it.checkIsSame(item) }
     }
 
+    fun deleteItems(items: List<CartItem>): List<Long> {
+        return items.map {
+            val found = findSameItem(it) ?: throw CartItemNotFoundException()
+
+            this.cartItems.remove(found)
+
+            found.productId
+        }
+    }
+
     companion object {
         val NULL = Cart(userId = 0L, cartItems = mutableListOf())
     }

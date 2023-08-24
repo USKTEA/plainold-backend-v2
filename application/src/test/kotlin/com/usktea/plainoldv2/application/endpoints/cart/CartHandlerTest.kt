@@ -2,12 +2,9 @@ package com.usktea.plainoldv2.application.endpoints.cart
 
 import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
-import com.usktea.plainoldv2.application.createAddCartItemRequest
-import com.usktea.plainoldv2.application.createCartItem
-import com.usktea.plainoldv2.application.createUpdateCartItemRequest
-import com.usktea.plainoldv2.application.createUsername
-import com.usktea.plainoldv2.domain.cart.CartItem
+import com.usktea.plainoldv2.application.*
 import com.usktea.plainoldv2.domain.cart.application.CartService
+import com.usktea.plainoldv2.domain.user.Username
 import com.usktea.plainoldv2.utils.JwtUtil
 import io.mockk.coEvery
 import org.junit.jupiter.api.Test
@@ -87,5 +84,24 @@ class CartHandlerTest {
             .expectStatus().isOk
             .expectBody()
             .jsonPath("$.updated").isNotEmpty
+    }
+
+    @Test
+    fun `사용자 카트의 아이템을 제거한다`() {
+        val username = Username(USERNAME)
+        val token = jwtUtil.encode(USERNAME)
+        val deleteCartItemRequest = createDeleteCartItemRequest()
+
+        coEvery { cartService.deleteItems(username, any()) } returns listOf(PRODUCT_ID)
+
+        client.mutateWith(csrf()).mutateWith(mockUser())
+            .post()
+            .uri("/carts/delete")
+            .header("Authorization", "Bearer $token")
+            .bodyValue(deleteCartItemRequest)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+            .jsonPath("$.deleted").isNotEmpty
     }
 }
