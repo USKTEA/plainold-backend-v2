@@ -59,3 +59,11 @@ data class UpdateCartItemRequest(
 data class UpdateCartItemResult(
     val updated: List<Long>
 )
+
+data class DeleteCartItemRequest(
+    val items: List<CartItemDto>
+)
+
+data class DeleteCartItemResult(
+    val deleted: List<Long>
+)

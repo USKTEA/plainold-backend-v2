@@ -104,4 +104,24 @@ class CartServiceTest {
         updatedIds shouldHaveSize 1
         updatedIds.first() shouldBe PRODUCT_ID
     }
+
+    @Test
+    fun `사용자 카트의 상품을 제거한다`() = runTest {
+        val username = createUsername(USERNAME)
+        val password = createPassword(PASSWORD)
+        val user = createUser(username, password)
+        val cartItem = createCartItem(PRODUCT_ID)
+        val cartItems = listOf(cartItem)
+        val cart = createCart(userId = user.id, cartItems = mutableListOf(cartItem))
+
+        coEvery { userRepository.findByUsernameOrNull(username) } returns user
+        coEvery { cartRepository.findByUserIdOrNull(user.id) } returns cart
+        coEvery { cartRepository.update(cart) } returns Unit
+
+        val deletedIds = cartService.deleteItems(username = username, cartItems = cartItems)
+
+        coVerify(exactly = 1) { cartRepository.update(cart) }
+        deletedIds shouldHaveSize 1
+        deletedIds.first() shouldBe PRODUCT_ID
+    }
 }

@@ -57,3 +57,23 @@ fun createUpdateCartItemRequest(): UpdateCartItemRequest {
         )
     )
 }
+
+fun createDeleteCartItemRequest(): DeleteCartItemRequest {
+    return DeleteCartItemRequest(
+        items = listOf(
+            CartItemDto(
+                productId = 1L,
+                price = 1L,
+                name = "T-Shirts",
+                thumbnailUrl = "1",
+                shippingFee = 1L,
+                freeShippingAmount = 1L,
+                quantity = 1L,
+                option = ItemOptionDto(
+                    color = "RED",
+                    size = "XL"
+                )
+            )
+        )
+    )
+}

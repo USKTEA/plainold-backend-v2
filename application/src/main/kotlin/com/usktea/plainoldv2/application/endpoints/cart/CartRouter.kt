@@ -14,6 +14,7 @@ class CartRouter {
             GET("", handler::getItems)
             POST("", handler::addItems)
             PATCH("", handler::updateItems)
+            POST("/delete", handler::deleteItems)
         }
     }
 }
