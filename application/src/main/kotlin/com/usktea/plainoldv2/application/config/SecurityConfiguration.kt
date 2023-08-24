@@ -1,11 +1,14 @@
 package com.usktea.plainoldv2.application.config
 
+import com.auth0.jwt.exceptions.JWTDecodeException
+import com.auth0.jwt.exceptions.TokenExpiredException
 import com.usktea.plainoldv2.domain.user.Username
 import com.usktea.plainoldv2.utils.JwtUtil
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
+import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
@@ -65,5 +68,37 @@ class RequestContextWebFilter(
         return Username(
             this.substring(BEARER_PREFIX.length).let { jwtUtil.decode(it) }
         )
+    }
+}
+
+@Component
+class JwtExceptionFilter : WebFilter {
+    override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+        return chain.filter(exchange)
+            .onErrorResume {
+                val response = exchange.response
+
+                when (it) {
+                    is TokenExpiredException -> {
+                        response.setStatusCode(HttpStatus.UNAUTHORIZED)
+                        response.writeWith(
+                            Mono.just(
+                                response.bufferFactory().wrap(it.message!!.toByteArray())
+                            )
+                        )
+                    }
+
+                    is JWTDecodeException -> {
+                        response.setStatusCode(HttpStatus.BAD_REQUEST)
+                        response.writeWith(
+                            Mono.just(
+                                response.bufferFactory().wrap(it.message!!.toByteArray())
+                            )
+                        )
+                    }
+
+                    else -> chain.filter(exchange)
+                }
+            }
     }
 }
