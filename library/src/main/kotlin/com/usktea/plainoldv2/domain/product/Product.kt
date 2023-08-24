@@ -33,13 +33,13 @@ class Product(
     companion object {
         fun fake(): Product {
             return Product(
-                productName = ProductName("T-Shirts"),
-                price = Price(1_000L),
-                categoryId = 1L,
+                productName = ProductName("Pants"),
+                price = Price(2_000L),
+                categoryId = 2L,
                 image = Image(
-                    productId = 1L,
-                    thumbnailUrl = ThumbnailUrl("1"),
-                    productImageUrls = mutableSetOf(ProductImageUrl(imageId = 1L, value = "1"))
+                    productId = 2L,
+                    thumbnailUrl = ThumbnailUrl("https://plainold.s3.amazonaws.com/product-image/10.jpg"),
+                    productImageUrls = mutableSetOf(ProductImageUrl(imageId = 2L, value = "https://plainold.s3.amazonaws.com/product-image/10.jpg"))
                 ),
                 description = ProductDescription(
                     summary = ProductSummary("Good"),

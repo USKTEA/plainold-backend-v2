@@ -1,6 +1,8 @@
 package com.usktea.plainoldv2.application.endpoints.healthCheck
 
+import com.usktea.plainoldv2.domain.option.OptionData
 import com.usktea.plainoldv2.domain.option.repository.OptionRepository
+import com.usktea.plainoldv2.domain.product.Product
 import com.usktea.plainoldv2.domain.product.repository.ProductRepository
 import com.usktea.plainoldv2.domain.user.repository.UserRepository
 import com.usktea.plainoldv2.utils.JwtUtil
@@ -25,8 +27,8 @@ class WelcomeHandler(
 //        Product.fake().also {
 //            productRepository.save(it)
 //        }
-//
-        optionRepository.deleteAll()
+
+//        optionRepository.deleteAll()
 //
 //        OptionData.fake().also {
 //            optionRepository.save(it)
