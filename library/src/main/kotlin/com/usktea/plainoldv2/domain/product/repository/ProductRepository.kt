@@ -9,12 +9,9 @@ import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
 import com.usktea.plainoldv2.domain.category.Category
 import com.usktea.plainoldv2.domain.product.FindProductSpec
 import com.usktea.plainoldv2.domain.product.Product
-import com.usktea.plainoldv2.domain.product.ProductImageUrl
-import com.usktea.plainoldv2.domain.product.ThumbnailUrl
 import com.usktea.plainoldv2.support.BaseRepository
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import org.hibernate.reactive.mutiny.Mutiny
-import org.hibernate.reactive.mutiny.Mutiny.fetch
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository

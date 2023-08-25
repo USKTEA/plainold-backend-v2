@@ -7,6 +7,8 @@ import jakarta.persistence.MappedSuperclass
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @MappedSuperclass
 class BaseEntity(
@@ -15,7 +17,7 @@ class BaseEntity(
     var id: Long = 0L
 ) {
     @CreationTimestamp
-    lateinit var createdAt: Instant
+    var createdAt: Instant = Instant.now()
 
     @UpdateTimestamp
     lateinit var updatedAt: Instant
@@ -36,5 +38,12 @@ class BaseEntity(
 
     override fun hashCode(): Int {
         return id.hashCode()
+    }
+
+    fun createdAt(): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val koreaZonedDateTime = this.createdAt.atZone(ZoneId.of("Asia/Seoul"))
+
+        return formatter.format(koreaZonedDateTime)
     }
 }

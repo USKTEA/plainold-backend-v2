@@ -30,3 +30,4 @@ class CartItemNotFoundException: GlobalException(errorMessage = ErrorMessage.CAR
 class CartNotFoundException: GlobalException(errorMessage = ErrorMessage.CART_NOT_FOUND.value)
 class CookieNotFoundException: GlobalException(errorMessage = ErrorMessage.COOKIE_NOT_FOUND.value)
 class RefreshTokenNotFoundException: GlobalException(errorMessage = ErrorMessage.REFRESH_TOKEN_NOT_FOUND.value)
+class InvalidRateException: GlobalException(errorMessage = ErrorMessage.INVALID_RATE.value)
