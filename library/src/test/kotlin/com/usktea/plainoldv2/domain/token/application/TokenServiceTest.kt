@@ -8,9 +8,7 @@ import com.usktea.plainoldv2.domain.user.Username
 import com.usktea.plainoldv2.utils.JwtUtil
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -34,9 +32,9 @@ class TokenServiceTest {
 
         val tokenDto = tokenService.issueToken(username)
 
+        coVerify(exactly = 1) { refreshTokenRepository.save(any()) }
         jwtUtil.decode(tokenDto.accessToken) shouldBe USERNAME
         tokenDto.refreshToken shouldNotBe null
-        coVerify(exactly = 1) { refreshTokenRepository.save(any()) }
     }
 
     @Test
@@ -45,7 +43,7 @@ class TokenServiceTest {
         val refreshToken = createRefreshToken(USERNAME)
 
         coEvery { refreshTokenRepository.findByNumberOrNull(refreshTokenNumber) } returns refreshToken
-        coEvery { refreshTokenRepository.update(refreshToken) } returns Unit
+        coEvery { refreshTokenRepository.update(refreshToken) } just Runs
 
         val tokenDto = tokenService.reissueToken(refreshTokenNumber)
 

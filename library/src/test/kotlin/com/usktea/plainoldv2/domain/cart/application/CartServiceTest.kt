@@ -6,9 +6,7 @@ import com.usktea.plainoldv2.domain.user.repository.UserRepository
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.shouldBe
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -74,7 +72,7 @@ class CartServiceTest {
 
         coEvery { userRepository.findByUsernameOrNull(username) } returns user
         coEvery { cartRepository.findByUserIdOrNull(user.id) } returns cart
-        coEvery { cartRepository.update(cart) } returns Unit
+        coEvery { cartRepository.update(cart) } just Runs
 
         cart.isEmpty() shouldBe true
 
@@ -96,7 +94,7 @@ class CartServiceTest {
 
         coEvery { userRepository.findByUsernameOrNull(username) } returns user
         coEvery { cartRepository.findByUserIdOrNull(user.id) } returns cart
-        coEvery { cartRepository.update(cart) } returns Unit
+        coEvery { cartRepository.update(cart) } just Runs
 
         val updatedIds = cartService.updateItems(username = username, cartItems = cartItems)
 
@@ -116,7 +114,7 @@ class CartServiceTest {
 
         coEvery { userRepository.findByUsernameOrNull(username) } returns user
         coEvery { cartRepository.findByUserIdOrNull(user.id) } returns cart
-        coEvery { cartRepository.update(cart) } returns Unit
+        coEvery { cartRepository.update(cart) } just Runs
 
         val deletedIds = cartService.deleteItems(username = username, cartItems = cartItems)
 
