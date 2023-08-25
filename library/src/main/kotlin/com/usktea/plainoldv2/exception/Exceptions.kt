@@ -28,3 +28,5 @@ class KakaopayReadyException: GlobalException(errorMessage = ErrorMessage.KAKAOP
 class KakaopayApproveException: GlobalException(errorMessage = ErrorMessage.KAKAOPAY_APPROVE.value)
 class CartItemNotFoundException: GlobalException(errorMessage = ErrorMessage.CART_ITEM_NOT_FOUND.value)
 class CartNotFoundException: GlobalException(errorMessage = ErrorMessage.CART_NOT_FOUND.value)
+class CookieNotFoundException: GlobalException(errorMessage = ErrorMessage.COOKIE_NOT_FOUND.value)
+class RefreshTokenNotFoundException: GlobalException(errorMessage = ErrorMessage.REFRESH_TOKEN_NOT_FOUND.value)

@@ -4,3 +4,7 @@ data class TokenDto(
     val accessToken: String,
     val refreshToken: String
 )
+
+data class ReissueTokenResultDto(
+    val accessToken: String
+)

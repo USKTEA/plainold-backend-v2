@@ -1,8 +1,10 @@
 package com.usktea.plainoldv2.utils
 
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class JwtUtilTest {
     private val jwtUtil = JwtUtil("SECRET")
@@ -14,5 +16,13 @@ class JwtUtilTest {
 
         token shouldContain "."
         jwtUtil.decode(token) shouldBe username
+    }
+
+    @Test
+    fun `refreshToken이 유효한 값인지 확인한다`() {
+        val uuid = UUID.randomUUID()
+        val refreshToken = jwtUtil.encode(uuid)
+
+        shouldNotThrowAny { jwtUtil.decodeRefreshToken(refreshToken) }
     }
 }
