@@ -15,6 +15,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.test.context.ActiveProfiles
+import java.util.UUID
 
 const val USERNAME = "tjrxo1234@gmail.com"
 
@@ -36,5 +37,20 @@ class TokenServiceTest {
         jwtUtil.decode(tokenDto.accessToken) shouldBe USERNAME
         tokenDto.refreshToken shouldNotBe null
         coVerify(exactly = 1) { refreshTokenRepository.save(any()) }
+    }
+
+    @Test
+    fun `refreshToken이 유효하다면 토큰을 재발급한다`() = runTest {
+        val refreshTokenNumber = jwtUtil.encode(UUID.randomUUID())
+        val refreshToken = createRefreshToken(USERNAME)
+
+        coEvery { refreshTokenRepository.findByNumberOrNull(refreshTokenNumber) } returns refreshToken
+        coEvery { refreshTokenRepository.update(refreshToken) } returns Unit
+
+        val tokenDto = tokenService.reissueToken(refreshTokenNumber)
+
+        coVerify(exactly = 1) { refreshTokenRepository.update(refreshToken) }
+        jwtUtil.decode(tokenDto.accessToken) shouldBe USERNAME
+        tokenDto.refreshToken shouldNotBe null
     }
 }

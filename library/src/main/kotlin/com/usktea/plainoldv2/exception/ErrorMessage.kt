@@ -27,5 +27,7 @@ enum class ErrorMessage(
     KAKAOPAY_READY("카카오페이 서버에 결제 준비 요청 진행 중 에러가 발생했습니다"),
     KAKAOPAY_APPROVE("카카오페이 서버에서 결제 승인 요청 진행 중 에러가 발생했습니다"),
     CART_NOT_FOUND("사용자 장바구니 정보를 찾을 수 없습니다"),
-    CART_ITEM_NOT_FOUND("사용자 장바구니에서 상품을 찾을 수 없습니다")
+    CART_ITEM_NOT_FOUND("사용자 장바구니에서 상품을 찾을 수 없습니다"),
+    COOKIE_NOT_FOUND("쿠키 정보를 찾을 수 없습니다"),
+    REFRESH_TOKEN_NOT_FOUND("RefreshToken 정보를 찾을 수 없습니다")
 }

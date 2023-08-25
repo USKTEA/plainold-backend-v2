@@ -12,8 +12,7 @@ class JwtUtil(
     private val algorithm: Algorithm = Algorithm.HMAC256(secret)
 
     companion object {
-        const val ACCESS_TOKEN_VALIDATION_SECOND: Long = 3000L
-        //1000L * 60 * 30;
+        const val ACCESS_TOKEN_VALIDATION_SECOND: Long = 1000L * 60 * 30;
         const val REFRESH_TOKEN_VALIDATION_SECOND: Long = 1000L * 60 * 60 * 24 * 14
     }
 
@@ -39,5 +38,10 @@ class JwtUtil(
         val decodedJwt = verifier.verify(token)
 
         return decodedJwt.getClaim("username").asString()
+    }
+
+    fun decodeRefreshToken(refreshTokenNumber: String) {
+        val verifier = JWT.require(algorithm).build()
+        verifier.verify(refreshTokenNumber)
     }
 }
