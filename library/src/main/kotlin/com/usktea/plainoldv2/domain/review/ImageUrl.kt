@@ -7,4 +7,10 @@ import jakarta.persistence.Embeddable
 data class ImageUrl(
     @Column(name = "imageUIrl")
     val value: String
-)
+) {
+    companion object {
+        fun from(value: String): ImageUrl {
+            return ImageUrl(value)
+        }
+    }
+}

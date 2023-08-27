@@ -1,20 +1,19 @@
 package com.usktea.plainoldv2.application.endpoints.review
 
-import com.usktea.plainoldv2.domain.review.FindReviewSpec
-import com.usktea.plainoldv2.domain.review.ReviewDto
-import com.usktea.plainoldv2.domain.review.ReviewsDto
+import com.usktea.plainoldv2.domain.review.*
 import com.usktea.plainoldv2.domain.review.application.ReviewService
+import com.usktea.plainoldv2.domain.user.Username
 import com.usktea.plainoldv2.exception.ParameterNotFoundException
+import com.usktea.plainoldv2.exception.RequestBodyNotFoundException
 import com.usktea.plainoldv2.support.PageDto
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.*
+import org.springframework.web.reactive.function.server.ServerResponse.created
 import org.springframework.web.reactive.function.server.ServerResponse.ok
-import org.springframework.web.reactive.function.server.bodyValueAndAwait
-import org.springframework.web.reactive.function.server.queryParamOrNull
+import java.net.URI
 
 @Component
 class ReviewHandler(
@@ -39,6 +38,19 @@ class ReviewHandler(
                 reviews = reviews,
                 page = page
             )
+        )
+    }
+
+    suspend fun postReview(request: ServerRequest): ServerResponse {
+        val username = request.attributeOrNull("username") as? Username ?: throw ParameterNotFoundException()
+        val postReviewRequestDto = request.awaitBodyOrNull<PostReviewRequestDto>() ?: throw RequestBodyNotFoundException()
+        val postReviewRequest = PostReviewRequest.from(postReviewRequestDto)
+
+        val review = reviewService.postReview(username = username, postReviewRequest = postReviewRequest)
+        val uri = URI.create(review.id.toString())
+
+        return created(uri).contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(
+            PostReviewResultDto(review.id)
         )
     }
 }

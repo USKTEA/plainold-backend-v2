@@ -20,13 +20,9 @@ class ProductService(
     }
 
     override suspend fun getProductDetail(productSpec: FindProductSpec): ProductDetailDto {
-        try {
-            val product = productRepository.findBySpec(productSpec)
-            val option = optionRepository.findByProductIdOrNull(productSpec.productId!!)
+        val product = productRepository.findBySpec(productSpec) ?: throw ProductNotFoundException()
+        val option = optionRepository.findByProductIdOrNull(productSpec.productId!!)
 
-            return ProductDetailDto.from(product, option)
-        } catch (exception: Exception) {
-            throw ProductNotFoundException()
-        }
+        return ProductDetailDto.from(product, option)
     }
 }

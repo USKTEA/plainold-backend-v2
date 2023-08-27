@@ -65,7 +65,13 @@ class Order(
 data class OrderNumber(
     @Column(name = "orderNumber")
     val value: String
-)
+) {
+    companion object {
+        fun from(number: String): OrderNumber {
+            return OrderNumber(number)
+        }
+    }
+}
 
 enum class OrderStatus(
     val value: String

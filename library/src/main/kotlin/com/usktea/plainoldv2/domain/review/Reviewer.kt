@@ -8,4 +8,13 @@ import jakarta.persistence.Embeddable
 data class Reviewer(
     val username: Username,
     val nickname: Nickname
-)
+) {
+    companion object {
+        fun of(username: Username, nickname: Nickname): Reviewer {
+            return Reviewer(
+                username = username,
+                nickname = nickname
+            )
+        }
+    }
+}

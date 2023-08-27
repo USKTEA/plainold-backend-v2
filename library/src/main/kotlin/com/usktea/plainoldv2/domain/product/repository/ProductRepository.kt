@@ -2,9 +2,7 @@ package com.usktea.plainoldv2.domain.product.repository
 
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.querydsl.where.WhereDsl
-import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMutinyReactiveQueryFactory
-import com.linecorp.kotlinjdsl.spring.data.reactive.query.listQuery
-import com.linecorp.kotlinjdsl.spring.data.reactive.query.pageQuery
+import com.linecorp.kotlinjdsl.spring.data.reactive.query.*
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
 import com.usktea.plainoldv2.domain.category.Category
 import com.usktea.plainoldv2.domain.product.FindProductSpec
@@ -48,8 +46,8 @@ class ProductRepository(
         }
     }
 
-    suspend fun findBySpec(spec: FindProductSpec): Product {
-        return queryFactory.singleQuery<Product> {
+    suspend fun findBySpec(spec: FindProductSpec): Product? {
+        return queryFactory.singleQueryOrNull<Product> {
             select(entity(Product::class))
             from(entity(Product::class))
             where(findSpec(spec))
@@ -59,6 +57,7 @@ class ProductRepository(
     private fun WhereDsl.findSpec(spec: FindProductSpec) =
         and(
             spec.categoryId?.let { col(Product::categoryId).equal(spec.categoryId) },
-            spec.productId?.let { col(Product::id).equal(spec.productId) }
+            spec.productId?.let { col(Product::id).equal(spec.productId) },
+            col(Product::productStatus).equal(spec.status)
         )
 }

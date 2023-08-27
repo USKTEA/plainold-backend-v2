@@ -31,4 +31,5 @@ class CartNotFoundException : GlobalException(errorMessage = ErrorMessage.CART_N
 class CookieNotFoundException : GlobalException(errorMessage = ErrorMessage.COOKIE_NOT_FOUND.value)
 class RefreshTokenNotFoundException : GlobalException(errorMessage = ErrorMessage.REFRESH_TOKEN_NOT_FOUND.value)
 class OrderCanWriteReviewNotFoundException :
-    GlobalException(errorMessage = ErrorMessage.ORDER_CAN_WRITE_REVIEW_NOT_FOUND.value)
+    GlobalException(httpStatus = HttpStatus.NOT_FOUND ,errorMessage = ErrorMessage.ORDER_CAN_WRITE_REVIEW_NOT_FOUND.value)
+class ReviewAlreadyWritten : GlobalException(errorMessage = ErrorMessage.REVIEW_ALREADY_WRITTEN.value)

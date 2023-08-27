@@ -12,4 +12,10 @@ data class Rate(
     init {
         require(value in 1..5) { ErrorMessage.INVALID_RATE.value }
     }
+
+    companion object {
+        fun from(value: Int): Rate {
+            return Rate(value)
+        }
+    }
 }

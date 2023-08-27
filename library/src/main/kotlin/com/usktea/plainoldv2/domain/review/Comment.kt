@@ -7,4 +7,10 @@ import jakarta.persistence.Embeddable
 data class Comment(
     @Column(name = "comment")
     val value: String
-)
+) {
+    companion object {
+        fun from(value: String): Comment {
+            return Comment(value)
+        }
+    }
+}
