@@ -19,3 +19,13 @@ fun createReview(reviewId: Long, productId: Long): Review {
         imageUrl = ImageUrl("1"),
     )
 }
+
+fun createPostReviewRequestDto(): PostReviewRequestDto {
+    return PostReviewRequestDto(
+        orderNumber = "tjrxo1234-111111",
+        productId = 1L,
+        comment = "아주 좋습니다",
+        rate = 5,
+        imageUrl = "1"
+    )
+}

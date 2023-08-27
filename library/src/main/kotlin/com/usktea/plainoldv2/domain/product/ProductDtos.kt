@@ -9,6 +9,7 @@ import java.time.Instant
 data class FindProductSpec(
     val categoryId: Long? = null,
     val productId: Long? = null,
+    val status: ProductStatus = ProductStatus.ON_SALE
 )
 
 data class ProductDto(

@@ -12,6 +12,7 @@ class ReviewRouter {
     fun reviewRoutes(handler: ReviewHandler) = coRouter {
         path(context).nest {
             GET("", handler::getReviews)
+            POST("", handler::postReview)
         }
     }
 }

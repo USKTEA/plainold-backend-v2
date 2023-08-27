@@ -31,5 +31,6 @@ enum class ErrorMessage(
     COOKIE_NOT_FOUND("쿠키 정보를 찾을 수 없습니다"),
     REFRESH_TOKEN_NOT_FOUND("RefreshToken 정보를 찾을 수 없습니다"),
     INVALID_RATE("정확하지 않은 Rate 값입니다"),
-    ORDER_CAN_WRITE_REVIEW_NOT_FOUND("구매평 작성이 가능한 주문기록을 찾을 수 없습니다")
+    ORDER_CAN_WRITE_REVIEW_NOT_FOUND("구매평 작성이 가능한 주문기록을 찾을 수 없습니다"),
+    REVIEW_ALREADY_WRITTEN("이미 작성한 구매평이 있습니다")
 }

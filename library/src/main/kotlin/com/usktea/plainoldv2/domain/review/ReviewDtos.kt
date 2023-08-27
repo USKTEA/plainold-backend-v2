@@ -1,5 +1,6 @@
 package com.usktea.plainoldv2.domain.review
 
+import com.usktea.plainoldv2.domain.order.OrderNumber
 import com.usktea.plainoldv2.support.PageDto
 
 data class FindReviewSpec(
@@ -49,3 +50,35 @@ data class ReviewsDto(
     val reviews: List<ReviewDto>,
     val page: PageDto
 )
+
+data class PostReviewRequestDto(
+    val productId: Long,
+    val orderNumber: String,
+    val comment: String,
+    val rate: Int,
+    val imageUrl: String?
+)
+
+data class PostReviewResultDto(
+    val reviewId: Long
+)
+
+data class PostReviewRequest(
+    val productId: Long,
+    val orderNumber: OrderNumber,
+    val comment: Comment,
+    val rate: Rate,
+    val imageUrl: ImageUrl?
+) {
+    companion object {
+        fun from(postReviewRequestDto: PostReviewRequestDto): PostReviewRequest {
+            return PostReviewRequest(
+                productId = postReviewRequestDto.productId,
+                orderNumber = OrderNumber.from(postReviewRequestDto.orderNumber),
+                comment = Comment.from(postReviewRequestDto.comment),
+                rate = Rate.from(postReviewRequestDto.rate),
+                imageUrl = postReviewRequestDto.imageUrl?.let { ImageUrl.from(it) }
+            )
+        }
+    }
+}

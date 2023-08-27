@@ -101,7 +101,7 @@ class OrderRepository(
                 )
             }.map { it.orderNumber }.toSet()
 
-            (orderNumbers - reviewsOrderNumbers).first()
+            (orderNumbers - reviewsOrderNumbers).firstOrNull()
         }
     }
 }
