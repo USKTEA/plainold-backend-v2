@@ -2,12 +2,17 @@ package com.usktea.plainoldv2.domain.order.repository
 
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.querydsl.expression.count
+import com.linecorp.kotlinjdsl.querydsl.from.join
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMutinyReactiveQueryFactory
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
+import com.linecorp.kotlinjdsl.spring.reactive.listQuery
 import com.usktea.plainoldv2.domain.order.Order
 import com.usktea.plainoldv2.domain.order.OrderLine
+import com.usktea.plainoldv2.domain.order.OrderNumber
+import com.usktea.plainoldv2.domain.order.OrderStatus
 import com.usktea.plainoldv2.domain.product.Product
 import com.usktea.plainoldv2.domain.product.ProductStatus
+import com.usktea.plainoldv2.domain.review.Review
 import com.usktea.plainoldv2.domain.user.User
 import com.usktea.plainoldv2.domain.user.Username
 import com.usktea.plainoldv2.exception.InvalidOrderItemException
@@ -68,4 +73,41 @@ class OrderRepository(
             where(col(User::username).equal(username))
         }
     }
+
+    suspend fun findOrderCanWriteReview(username: Username, productId: Long): OrderNumber? {
+        return queryFactory.withFactory { factory ->
+            val orderNumbers = factory.listQuery<Row> {
+                selectMulti(col(Order::id), col(Order::orderNumber), col(OrderLine::productId))
+                from(entity(Order::class))
+                join(Order::orderLines)
+                whereAnd(
+                    col(Order::username).equal(username),
+                    col(Order::status).equal(OrderStatus.DELIVERY_COMPLETED),
+                    col(OrderLine::productId).equal(productId)
+                )
+                groupBy(col(Order::id), col(Order::orderNumber), col(OrderLine::productId))
+            }.map { it.orderNumber }.toSet()
+
+            if (orderNumbers.isEmpty()) {
+                return@withFactory null
+            }
+
+            val reviewsOrderNumbers = factory.listQuery<Review> {
+                select(entity(Review::class))
+                from(entity(Review::class))
+                whereAnd(
+                    col(Review::productId).equal(productId),
+                    col(Review::orderNumber).`in`(orderNumbers)
+                )
+            }.map { it.orderNumber }.toSet()
+
+            (orderNumbers - reviewsOrderNumbers).first()
+        }
+    }
 }
+
+data class Row(
+    val id: Long,
+    val orderNumber: OrderNumber,
+    val productId: Long,
+)

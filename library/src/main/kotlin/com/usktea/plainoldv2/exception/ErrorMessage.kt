@@ -30,5 +30,6 @@ enum class ErrorMessage(
     CART_ITEM_NOT_FOUND("사용자 장바구니에서 상품을 찾을 수 없습니다"),
     COOKIE_NOT_FOUND("쿠키 정보를 찾을 수 없습니다"),
     REFRESH_TOKEN_NOT_FOUND("RefreshToken 정보를 찾을 수 없습니다"),
-    INVALID_RATE("정확하지 않은 Rate 값입니다")
+    INVALID_RATE("정확하지 않은 Rate 값입니다"),
+    ORDER_CAN_WRITE_REVIEW_NOT_FOUND("구매평 작성이 가능한 주문기록을 찾을 수 없습니다")
 }

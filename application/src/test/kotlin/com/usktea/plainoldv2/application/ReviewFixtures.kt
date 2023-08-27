@@ -1,7 +1,9 @@
 package com.usktea.plainoldv2.application
 
+import com.usktea.plainoldv2.domain.order.OrderNumber
 import com.usktea.plainoldv2.domain.review.*
-import java.time.Instant
+import com.usktea.plainoldv2.domain.user.Nickname
+import com.usktea.plainoldv2.domain.user.Username
 
 fun createReview(reviewId: Long, productId: Long): Review {
     return Review(
@@ -15,5 +17,5 @@ fun createReview(reviewId: Long, productId: Long): Review {
         rate = Rate(5),
         comment = Comment("매우 좋습니다"),
         imageUrl = ImageUrl("1"),
-        )
+    )
 }

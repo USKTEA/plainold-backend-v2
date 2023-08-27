@@ -3,7 +3,7 @@ package com.usktea.plainoldv2.domain.option.repository
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.querydsl.from.fetch
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMutinyReactiveQueryFactory
-import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
+import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQueryOrNull
 import com.usktea.plainoldv2.domain.option.OptionData
 import com.usktea.plainoldv2.support.BaseRepository
 import io.smallrye.mutiny.coroutines.awaitSuspending
@@ -31,16 +31,12 @@ class OptionRepository(
     }
 
     suspend fun findByProductIdOrNull(productId: Long): OptionData? {
-        try {
-            return queryFactory.singleQuery {
-                select(entity(OptionData::class))
-                from(entity(OptionData::class))
-                fetch(OptionData::sizes)
-                fetch(OptionData::colors)
-                where(col(OptionData::productId).equal(productId))
-            }
-        } catch (exception: RuntimeException) {
-            return null
+        return queryFactory.singleQueryOrNull {
+            select(entity(OptionData::class))
+            from(entity(OptionData::class))
+            fetch(OptionData::sizes)
+            fetch(OptionData::colors)
+            where(col(OptionData::productId).equal(productId))
         }
     }
 }

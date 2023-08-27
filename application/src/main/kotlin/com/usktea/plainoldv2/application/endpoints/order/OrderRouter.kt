@@ -12,6 +12,7 @@ class OrderRouter {
     fun orderRoutes(handler: OrderHandler) = coRouter { 
         path(context).nest {
             POST("", handler::createOrder)
+            GET("", handler::getOrderCanWriteReview)
         }
     }
 }
