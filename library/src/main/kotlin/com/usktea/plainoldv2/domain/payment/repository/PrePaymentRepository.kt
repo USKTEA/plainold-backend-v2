@@ -2,7 +2,7 @@ package com.usktea.plainoldv2.domain.payment.repository
 
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMutinyReactiveQueryFactory
-import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
+import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQueryOrNull
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.updateQuery
 import com.usktea.plainoldv2.domain.payment.PrePayment
 import com.usktea.plainoldv2.support.BaseRepository
@@ -31,14 +31,10 @@ class PrePaymentRepository(
     }
 
     suspend fun findByIdOrNull(id: Long): PrePayment? {
-        try {
-            return queryFactory.singleQuery<PrePayment> {
-                select(entity(PrePayment::class))
-                from(entity(PrePayment::class))
-                where(col(PrePayment::id).equal(id))
-            }
-        } catch (exception: Exception) {
-            return null
+        return queryFactory.singleQueryOrNull<PrePayment> {
+            select(entity(PrePayment::class))
+            from(entity(PrePayment::class))
+            where(col(PrePayment::id).equal(id))
         }
     }
 

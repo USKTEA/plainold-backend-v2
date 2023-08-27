@@ -5,6 +5,7 @@ import com.linecorp.kotlinjdsl.querydsl.expression.count
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMutinyReactiveQueryFactory
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.deleteQuery
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
+import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQueryOrNull
 import com.usktea.plainoldv2.domain.user.User
 import com.usktea.plainoldv2.domain.user.Username
 import com.usktea.plainoldv2.exception.UsernameAlreadyInUse
@@ -40,14 +41,10 @@ class UserRepository(
     }
 
     suspend fun findByUsernameOrNull(username: Username): User? {
-        try {
-            return queryFactory.singleQuery<User> {
-                select(entity(User::class))
-                from(entity(User::class))
-                where(col(User::username).equal(username))
-            }
-        } catch (exception: Exception) {
-            return null
+        return queryFactory.singleQueryOrNull<User> {
+            select(entity(User::class))
+            from(entity(User::class))
+            where(col(User::username).equal(username))
         }
     }
 

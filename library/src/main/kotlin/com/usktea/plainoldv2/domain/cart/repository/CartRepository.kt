@@ -3,7 +3,7 @@ package com.usktea.plainoldv2.domain.cart.repository
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.querydsl.from.fetch
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMutinyReactiveQueryFactory
-import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
+import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQueryOrNull
 import com.linecorp.kotlinjdsl.spring.reactive.singleQuery
 import com.usktea.plainoldv2.domain.cart.Cart
 import com.usktea.plainoldv2.support.BaseRepository
@@ -18,15 +18,11 @@ class CartRepository(
     private val queryFactory: SpringDataHibernateMutinyReactiveQueryFactory
 ) : BaseRepository<Cart> {
     suspend fun findByUserIdOrNull(userId: Long): Cart? {
-        try {
-            return queryFactory.singleQuery<Cart> {
-                select(entity(Cart::class))
-                from(entity(Cart::class))
-                fetch(Cart::cartItems)
-                where(col(Cart::userId).equal(userId))
-            }
-        } catch (exception: Exception) {
-            return null
+        return queryFactory.singleQueryOrNull<Cart> {
+            select(entity(Cart::class))
+            from(entity(Cart::class))
+            fetch(Cart::cartItems)
+            where(col(Cart::userId).equal(userId))
         }
     }
 

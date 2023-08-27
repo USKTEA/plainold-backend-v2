@@ -120,3 +120,13 @@ data class OrderResultDto(
         }
     }
 }
+
+data class OrderNumberDto(
+    val orderNumber: String
+) {
+    companion object {
+        fun from(orderNumber: OrderNumber): OrderNumberDto {
+            return OrderNumberDto(orderNumber.value)
+        }
+    }
+}

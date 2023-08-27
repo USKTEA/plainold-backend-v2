@@ -10,6 +10,7 @@ class Order(
     id: Long = 0L,
 
     @Embedded
+    @Access(AccessType.FIELD)
     val orderNumber: OrderNumber,
 
     @ElementCollection

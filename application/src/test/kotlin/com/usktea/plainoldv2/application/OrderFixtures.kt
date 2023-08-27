@@ -63,3 +63,7 @@ fun createOrderResult(): OrderResultDto {
         paymentMethod = PaymentMethod.CASH.method
     )
 }
+
+fun createOrderNumber(number: String): OrderNumber {
+    return OrderNumber(number)
+}

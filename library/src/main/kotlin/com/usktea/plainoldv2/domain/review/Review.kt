@@ -1,9 +1,9 @@
 package com.usktea.plainoldv2.domain.review
 
+import com.usktea.plainoldv2.domain.order.OrderNumber
 import com.usktea.plainoldv2.support.BaseEntity
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
-import java.time.Instant
 
 @Entity
 class Review(

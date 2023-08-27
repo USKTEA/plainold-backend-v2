@@ -2,12 +2,11 @@ package com.usktea.plainoldv2.domain.token.repository
 
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.spring.data.reactive.query.SpringDataHibernateMutinyReactiveQueryFactory
-import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQuery
+import com.linecorp.kotlinjdsl.spring.data.reactive.query.singleQueryOrNull
 import com.linecorp.kotlinjdsl.spring.reactive.singleQuery
 import com.usktea.plainoldv2.domain.token.RefreshToken
 import com.usktea.plainoldv2.support.BaseRepository
 import io.smallrye.mutiny.coroutines.awaitSuspending
-import jakarta.persistence.NoResultException
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory
 import org.springframework.stereotype.Repository
 
@@ -25,14 +24,10 @@ class RefreshTokenRepository(
     }
 
     suspend fun findByNumberOrNull(refreshTokenNumber: String): RefreshToken? {
-        try {
-            return queryFactory.singleQuery {
-                select(entity(RefreshToken::class))
-                from(entity(RefreshToken::class))
-                where(col(RefreshToken::number).equal(refreshTokenNumber))
-            }
-        } catch (exception: NoResultException) {
-            return null
+        return queryFactory.singleQueryOrNull {
+            select(entity(RefreshToken::class))
+            from(entity(RefreshToken::class))
+            where(col(RefreshToken::number).equal(refreshTokenNumber))
         }
     }
 
@@ -53,7 +48,7 @@ class RefreshTokenRepository(
 
             found.updateTo(refreshToken)
 
-            sessionFactory.withSession {session ->
+            sessionFactory.withSession { session ->
                 session.merge(found).flatMap { session.flush() }
             }
         }
