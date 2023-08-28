@@ -3,6 +3,7 @@ package com.usktea.plainoldv2.domain.review
 import com.usktea.plainoldv2.domain.order.OrderNumber
 import com.usktea.plainoldv2.domain.user.Nickname
 import com.usktea.plainoldv2.domain.user.Username
+import com.usktea.plainoldv2.exception.ErrorMessage
 import com.usktea.plainoldv2.support.BaseEntity
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
@@ -20,14 +21,23 @@ class Review(
     val reviewer: Reviewer,
 
     @Embedded
-    val rate: Rate,
+    var rate: Rate,
 
     @Embedded
-    val comment: Comment,
+    var comment: Comment,
 
     @Embedded
-    val imageUrl: ImageUrl?
+    var imageUrl: ImageUrl?
     ) : BaseEntity(id) {
+
+    fun edit(username: Username, editReviewRequest: EditReviewRequest) {
+        require(this.reviewer.username == username) { ErrorMessage.REVIEWER_NOT_MATCH }
+
+        this.rate = editReviewRequest.rate
+        this.comment = editReviewRequest.comment
+        this.imageUrl = editReviewRequest.imageUrl
+    }
+
     companion object {
         fun of(postReviewRequest: PostReviewRequest, username: Username, nickname: Nickname): Review {
             return Review(
@@ -44,5 +54,3 @@ class Review(
         }
     }
 }
-
-

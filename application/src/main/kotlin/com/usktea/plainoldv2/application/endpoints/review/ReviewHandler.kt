@@ -4,6 +4,7 @@ import com.usktea.plainoldv2.domain.review.*
 import com.usktea.plainoldv2.domain.review.application.ReviewService
 import com.usktea.plainoldv2.domain.user.Username
 import com.usktea.plainoldv2.exception.ParameterNotFoundException
+import com.usktea.plainoldv2.exception.RequestAttributeNotFoundException
 import com.usktea.plainoldv2.exception.RequestBodyNotFoundException
 import com.usktea.plainoldv2.support.PageDto
 import org.springframework.data.domain.PageRequest
@@ -43,8 +44,9 @@ class ReviewHandler(
 
     suspend fun postReview(request: ServerRequest): ServerResponse {
         val username = request.attributeOrNull("username") as? Username ?: throw ParameterNotFoundException()
-        val postReviewRequestDto = request.awaitBodyOrNull<PostReviewRequestDto>() ?: throw RequestBodyNotFoundException()
-        val postReviewRequest = PostReviewRequest.from(postReviewRequestDto)
+        val postReviewRequest = request.awaitBodyOrNull<PostReviewRequestDto>()?.let {
+            PostReviewRequest.from(it)
+        } ?: throw RequestBodyNotFoundException()
 
         val review = reviewService.postReview(username = username, postReviewRequest = postReviewRequest)
         val uri = URI.create(review.id.toString())
@@ -52,5 +54,16 @@ class ReviewHandler(
         return created(uri).contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(
             PostReviewResultDto(review.id)
         )
+    }
+
+    suspend fun editReview(request: ServerRequest): ServerResponse {
+        val username = request.attributeOrNull("username") as? Username ?: throw RequestAttributeNotFoundException()
+        val editReviewRequest = request.awaitBodyOrNull<EditReviewRequestDto>()?.let {
+            EditReviewRequest.from(it)
+        } ?: throw RequestBodyNotFoundException()
+
+        val edited = reviewService.editReview(username = username, editReviewRequest = editReviewRequest)
+
+        return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(EditReviewResultDto(edited.id))
     }
 }

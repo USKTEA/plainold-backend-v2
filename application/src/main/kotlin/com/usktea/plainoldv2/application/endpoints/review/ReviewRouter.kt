@@ -13,6 +13,7 @@ class ReviewRouter {
         path(context).nest {
             GET("", handler::getReviews)
             POST("", handler::postReview)
+            PATCH("", handler::editReview)
         }
     }
 }
