@@ -34,5 +34,6 @@ enum class ErrorMessage(
     ORDER_CAN_WRITE_REVIEW_NOT_FOUND("구매평 작성이 가능한 주문기록을 찾을 수 없습니다"),
     REVIEW_ALREADY_WRITTEN("이미 작성한 구매평이 있습니다"),
     REVIEW_NOT_FOUND("구매평 정보를 찾을 수 없습니다"),
-    REVIEWER_NOT_MATCH("작성자 정보가 일치하지 않습니다")
+    REVIEWER_NOT_MATCH("작성자 정보가 일치하지 않습니다"),
+    NOT_HAVE_PERMISSION("해당 권한이 없습니다")
 }

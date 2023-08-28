@@ -14,6 +14,7 @@ class ReviewRouter {
             GET("", handler::getReviews)
             POST("", handler::postReview)
             PATCH("", handler::editReview)
+            DELETE("/{id}", handler::deleteReview)
         }
     }
 }

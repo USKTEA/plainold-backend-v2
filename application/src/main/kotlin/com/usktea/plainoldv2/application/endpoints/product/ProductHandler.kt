@@ -41,7 +41,7 @@ class ProductHandler(
     }
 
     suspend fun findById(request: ServerRequest): ServerResponse {
-        val productId = requireNotNull(request.pathVariable("id")).toLong()
+        val productId = checkNotNull(request.pathVariable("id")).toLong()
         val productDetail = productService.getProductDetail(FindProductSpec(productId = productId))
 
         return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(productDetail)

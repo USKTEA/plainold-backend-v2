@@ -22,6 +22,7 @@ const val PRODUCT_ID = 1L
 const val TRUE = true
 const val FALSE = false
 const val PAGE = 1
+const val REVIEW_ID = 1L
 
 @WebFluxTest(ReviewRouter::class, ReviewHandler::class)
 class ReviewHandlerTest {
@@ -91,5 +92,23 @@ class ReviewHandlerTest {
             .expectStatus().isOk
             .expectBody()
             .jsonPath("$.reviewId").isEqualTo(review.id)
+    }
+
+    @Test
+    fun `구매평을 삭제한다`() {
+        val token = jwtUtil.encode(USERNAME)
+        val username = createUsername(USERNAME)
+        val review = createReview(reviewId = REVIEW_ID, productId = PRODUCT_ID)
+
+        coEvery { reviewService.deleteReview(username, REVIEW_ID) } returns review
+
+        client.mutateWith(csrf()).mutateWith(mockUser())
+            .delete()
+            .uri("/reviews/$REVIEW_ID")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+            .jsonPath("$.reviewId").isEqualTo(REVIEW_ID)
     }
 }

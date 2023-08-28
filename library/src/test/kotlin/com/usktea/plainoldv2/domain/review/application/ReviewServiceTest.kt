@@ -3,6 +3,7 @@ package com.usktea.plainoldv2.domain.review.application
 import com.usktea.plainoldv2.*
 import com.usktea.plainoldv2.domain.cart.application.PASSWORD
 import com.usktea.plainoldv2.domain.order.OrderNumber
+import com.usktea.plainoldv2.domain.review.ReviewStatus
 import com.usktea.plainoldv2.domain.review.repository.ReviewRepository
 import com.usktea.plainoldv2.domain.user.repository.UserRepository
 import io.kotest.matchers.collections.shouldHaveSize
@@ -82,5 +83,23 @@ class ReviewServiceTest {
 
         coVerify(exactly = 1) { reviewRepository.update(review) }
         edited.id shouldBe review.id
+    }
+
+    @Test
+    fun `사용자 요청에 맞게 구매평을 삭제한다`() = runTest {
+        val username = createUsername(USERNAME)
+        val password = createPassword(PASSWORD)
+        val user = createUser(username, password)
+        val review =
+            createReview(reviewId = REVIEW_ID, productId = PRODUCT_ID, orderNumber = ORDER_NUMBER, username = USERNAME)
+
+        coEvery { userRepository.findByUsernameOrNull(username) } returns user
+        coEvery { reviewRepository.findByIdOrNull(REVIEW_ID) } returns review
+        coEvery { reviewRepository.delete(review) } just Runs
+
+        val deleted = reviewService.deleteReview(username, REVIEW_ID)
+
+        coVerify(exactly = 1) { reviewRepository.delete(review) }
+        deleted.status shouldBe ReviewStatus.DELETED
     }
 }
