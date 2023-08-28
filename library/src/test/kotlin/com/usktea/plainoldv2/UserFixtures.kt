@@ -34,3 +34,11 @@ fun createUserSignUpRequest(username: Username, password: Password, nickname: Ni
 fun createTokenDto(accessToken: String, refreshToken: String): TokenDto {
     return TokenDto(accessToken, refreshToken)
 }
+
+fun createRoleAdmin(): Role {
+    return Role.ADMIN
+}
+
+fun createRoleMember(): Role {
+    return Role.MEMBER
+}

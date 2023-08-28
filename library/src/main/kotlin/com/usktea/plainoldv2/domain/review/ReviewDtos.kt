@@ -111,3 +111,7 @@ data class EditReviewRequest(
         }
     }
 }
+
+data class DeleteReviewResultDto(
+    val reviewId: Long
+)

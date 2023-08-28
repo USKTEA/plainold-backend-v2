@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 class ReviewService(
     private val reviewRepository: ReviewRepository,
     private val userRepository: UserRepository,
-) : FindAllReviewByPagingUseCase, PostReviewUseCase, EditReviewUseCase {
+) : FindAllReviewByPagingUseCase, PostReviewUseCase, EditReviewUseCase, DeleteReviewUseCase {
     override suspend fun findAllByPaging(findReviewSpec: FindReviewSpec, pageable: Pageable): Page<Review> {
         return reviewRepository.findAllByPaging(findReviewSpec, pageable)
     }
@@ -39,6 +39,17 @@ class ReviewService(
         review.edit(user.username, editReviewRequest)
 
         reviewRepository.update(review)
+
+        return review
+    }
+
+    override suspend fun deleteReview(username: Username, reviewId: Long): Review {
+        val user = userRepository.findByUsernameOrNull(username) ?: throw UserNotExistsException()
+        val review = reviewRepository.findByIdOrNull(reviewId) ?: throw ReviewNotFoundException()
+
+        review.delete(user.username, user.role)
+
+        reviewRepository.delete(review)
 
         return review
     }

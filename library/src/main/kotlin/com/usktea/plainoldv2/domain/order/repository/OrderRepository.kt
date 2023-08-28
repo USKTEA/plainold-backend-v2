@@ -13,6 +13,7 @@ import com.usktea.plainoldv2.domain.order.OrderStatus
 import com.usktea.plainoldv2.domain.product.Product
 import com.usktea.plainoldv2.domain.product.ProductStatus
 import com.usktea.plainoldv2.domain.review.Review
+import com.usktea.plainoldv2.domain.review.ReviewStatus
 import com.usktea.plainoldv2.domain.user.User
 import com.usktea.plainoldv2.domain.user.Username
 import com.usktea.plainoldv2.exception.InvalidOrderItemException
@@ -97,7 +98,8 @@ class OrderRepository(
                 from(entity(Review::class))
                 whereAnd(
                     col(Review::productId).equal(productId),
-                    col(Review::orderNumber).`in`(orderNumbers)
+                    col(Review::status).equal(ReviewStatus.ACTIVE),
+                    col(Review::orderNumber).`in`(orderNumbers),
                 )
             }.map { it.orderNumber }.toSet()
 

@@ -64,6 +64,19 @@ class ReviewHandler(
 
         val edited = reviewService.editReview(username = username, editReviewRequest = editReviewRequest)
 
-        return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(EditReviewResultDto(edited.id))
+        return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(
+            EditReviewResultDto(edited.id)
+        )
+    }
+
+    suspend fun deleteReview(request: ServerRequest): ServerResponse {
+        val username = request.attributeOrNull("username") as? Username ?: throw RequestAttributeNotFoundException()
+        val reviewId = checkNotNull(request.pathVariable("id")).toLong()
+
+        val deleted = reviewService.deleteReview(username = username, reviewId = reviewId)
+
+        return ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(
+            DeleteReviewResultDto(deleted.id)
+        )
     }
 }

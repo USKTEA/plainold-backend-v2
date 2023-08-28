@@ -11,6 +11,7 @@ import com.usktea.plainoldv2.domain.product.Product
 import com.usktea.plainoldv2.domain.product.ProductStatus
 import com.usktea.plainoldv2.domain.review.FindReviewSpec
 import com.usktea.plainoldv2.domain.review.Review
+import com.usktea.plainoldv2.domain.review.ReviewStatus
 import com.usktea.plainoldv2.exception.ProductNotFoundException
 import com.usktea.plainoldv2.exception.ReviewAlreadyWrittenException
 import com.usktea.plainoldv2.support.BaseRepository
@@ -29,7 +30,10 @@ class ReviewRepository(
         return queryFactory.singleQueryOrNull {
             select(entity(Review::class))
             from(entity(Review::class))
-            where(col(Review::id).equal(id))
+            whereAnd(
+                col(Review::id).equal(id),
+                col(Review::status).equal(ReviewStatus.ACTIVE)
+            )
         }
     }
 
@@ -44,7 +48,8 @@ class ReviewRepository(
     private fun WhereDsl.findSpec(spec: FindReviewSpec) =
         and(
             col(Review::productId).equal(spec.productId),
-            spec.photoReviews.takeIf { it }?.let { col(Review::imageUrl).isNotNull() }
+            spec.photoReviews.takeIf { it }?.let { col(Review::imageUrl).isNotNull() },
+            col(Review::status).equal(ReviewStatus.ACTIVE)
         )
 
     override suspend fun findAll(): List<Review> {
@@ -72,7 +77,8 @@ class ReviewRepository(
                     from(entity(Review::class))
                     whereAnd(
                         col(Review::orderNumber).equal(entity.orderNumber),
-                        col(Review::productId).equal(entity.productId)
+                        col(Review::productId).equal(entity.productId),
+                        col(Review::status).equal(ReviewStatus.ACTIVE)
                     )
                 }
 
@@ -92,7 +98,29 @@ class ReviewRepository(
             val found = factory.singleQuery<Review> {
                 select(entity(Review::class))
                 from(entity(Review::class))
-                where(col(Review::id).equal(entity.id))
+                whereAnd(
+                    col(Review::id).equal(entity.id),
+                    col(Review::status).equal(ReviewStatus.ACTIVE)
+                )
+            }
+
+            found.updateTo(entity)
+
+            sessionFactory.withSession { session ->
+                session.merge(found).flatMap { session.flush() }
+            }
+        }
+    }
+
+    suspend fun delete(entity: Review) {
+        queryFactory.transactionWithFactory { factory ->
+            val found = factory.singleQuery<Review> {
+                select(entity(Review::class))
+                from(entity(Review::class))
+                whereAnd(
+                    col(Review::id).equal(entity.id),
+                    col(Review::status).equal(ReviewStatus.ACTIVE)
+                )
             }
 
             found.updateTo(entity)
@@ -108,4 +136,5 @@ private fun Review.updateTo(entity: Review) {
     this.rate = entity.rate
     this.comment = entity.comment
     this.imageUrl = entity.imageUrl
+    this.status = entity.status
 }
