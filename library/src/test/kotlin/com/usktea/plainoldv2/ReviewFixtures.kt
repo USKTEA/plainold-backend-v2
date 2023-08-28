@@ -14,13 +14,18 @@ fun createFindReviewSpec(
     )
 }
 
-fun createReview(productId: Long, orderNumber: String = "tjrxo1234-111111"): Review {
+fun createReview(
+    reviewId: Long = 1L,
+    productId: Long = 1L,
+    orderNumber: String = "tjrxo1234-111111",
+    username: String = "tjrxo1234@gmail.com"
+): Review {
     return Review(
-        id = 1L,
+        id = reviewId,
         productId = productId,
         orderNumber = OrderNumber(orderNumber),
         reviewer = Reviewer(
-            username = Username("tjrxo1234@gmail.com"),
+            username = Username(username),
             nickname = Nickname("김뚜루")
         ),
         rate = Rate(5),
@@ -39,5 +44,19 @@ fun createPostReviewRequest(
         comment = Comment("너무 좋아요"),
         rate = Rate(5),
         imageUrl = ImageUrl("1")
+    )
+}
+
+fun createEditReviewRequest(
+    reviewId: Long = 1L,
+    comment: Comment = Comment("너무 좋아요"),
+    rate: Rate = Rate(5),
+    imageUrl: ImageUrl = ImageUrl("1")
+): EditReviewRequest {
+    return EditReviewRequest(
+        id = reviewId,
+        comment = comment,
+        rate = rate,
+        imageUrl = imageUrl
     )
 }

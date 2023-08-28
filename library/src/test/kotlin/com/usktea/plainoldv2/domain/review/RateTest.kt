@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles
 class RateTest {
 
     @Test
-    fun `Rate의 값은 1이상 5이하인 같이다`() {
+    fun `Rate의 값은 1이상 5이하인 값이다`() {
         shouldThrowAny { Rate(0) }
         shouldThrowAny { Rate(6) }
         shouldNotThrowAny { Rate(1) }

@@ -29,3 +29,12 @@ fun createPostReviewRequestDto(): PostReviewRequestDto {
         imageUrl = "1"
     )
 }
+
+fun createEditReviewRequestDto(): EditReviewRequestDto {
+    return EditReviewRequestDto(
+        id = 1L,
+        comment = "아주 좋습니다",
+        rate = 5,
+        imageUrl = "1"
+    )
+}

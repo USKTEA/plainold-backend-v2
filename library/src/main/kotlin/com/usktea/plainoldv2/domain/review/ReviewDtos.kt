@@ -59,6 +59,17 @@ data class PostReviewRequestDto(
     val imageUrl: String?
 )
 
+data class EditReviewRequestDto(
+    val id: Long,
+    val comment: String,
+    val rate: Int,
+    val imageUrl: String?
+)
+
+data class EditReviewResultDto(
+    val reviewId: Long
+)
+
 data class PostReviewResultDto(
     val reviewId: Long
 )
@@ -78,6 +89,24 @@ data class PostReviewRequest(
                 comment = Comment.from(postReviewRequestDto.comment),
                 rate = Rate.from(postReviewRequestDto.rate),
                 imageUrl = postReviewRequestDto.imageUrl?.let { ImageUrl.from(it) }
+            )
+        }
+    }
+}
+
+data class EditReviewRequest(
+    val id: Long,
+    val comment: Comment,
+    val rate: Rate,
+    val imageUrl: ImageUrl?
+) {
+    companion object {
+        fun from(editReviewRequestDto: EditReviewRequestDto): EditReviewRequest {
+            return EditReviewRequest(
+                id = editReviewRequestDto.id,
+                comment = Comment.from(editReviewRequestDto.comment),
+                rate = Rate.from(editReviewRequestDto.rate),
+                imageUrl = editReviewRequestDto.imageUrl?.let { ImageUrl.from(it) }
             )
         }
     }

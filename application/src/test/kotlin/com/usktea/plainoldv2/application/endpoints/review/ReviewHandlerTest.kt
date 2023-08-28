@@ -2,6 +2,7 @@ package com.usktea.plainoldv2.application.endpoints.review
 
 import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
+import com.usktea.plainoldv2.application.createEditReviewRequestDto
 import com.usktea.plainoldv2.application.createPostReviewRequestDto
 import com.usktea.plainoldv2.application.createReview
 import com.usktea.plainoldv2.application.createUsername
@@ -69,6 +70,25 @@ class ReviewHandlerTest {
             .bodyValue(postReviewRequestDto)
             .exchange()
             .expectStatus().isCreated
+            .expectBody()
+            .jsonPath("$.reviewId").isEqualTo(review.id)
+    }
+
+    @Test
+    fun `구매평을 수정한다`() {
+        val token = jwtUtil.encode(USERNAME)
+        val editReviewRequestDto = createEditReviewRequestDto()
+        val review = createReview(reviewId = 1L, productId = PRODUCT_ID)
+
+        coEvery { reviewService.editReview(any(), any()) } returns review
+
+        client.mutateWith(csrf()).mutateWith(mockUser())
+            .patch()
+            .uri("/reviews")
+            .header("Authorization", "Bearer $token")
+            .bodyValue(editReviewRequestDto)
+            .exchange()
+            .expectStatus().isOk
             .expectBody()
             .jsonPath("$.reviewId").isEqualTo(review.id)
     }
