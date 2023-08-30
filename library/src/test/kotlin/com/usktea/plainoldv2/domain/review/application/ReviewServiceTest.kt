@@ -95,11 +95,11 @@ class ReviewServiceTest {
 
         coEvery { userRepository.findByUsernameOrNull(username) } returns user
         coEvery { reviewRepository.findByIdOrNull(REVIEW_ID) } returns review
-        coEvery { reviewRepository.delete(review) } just Runs
+        coEvery { reviewRepository.update(review) } just Runs
 
         val deleted = reviewService.deleteReview(username, REVIEW_ID)
 
-        coVerify(exactly = 1) { reviewRepository.delete(review) }
+        coVerify(exactly = 1) { reviewRepository.update(review) }
         deleted.status shouldBe ReviewStatus.DELETED
     }
 }

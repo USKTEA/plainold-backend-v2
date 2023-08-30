@@ -49,7 +49,7 @@ class ReviewService(
 
         review.delete(user.username, user.role)
 
-        reviewRepository.delete(review)
+        reviewRepository.update(review)
 
         return review
     }
