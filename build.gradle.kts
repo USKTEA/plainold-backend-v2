@@ -77,6 +77,10 @@ subprojects {
         // jwt
         implementation("com.auth0:java-jwt:4.4.0")
 
+        // s3
+        implementation("software.amazon.awssdk:s3:2.18.41")
+        implementation("software.amazon.awssdk:netty-nio-client:2.18.41")
+
         // test
         testImplementation("org.springframework.boot:spring-boot-starter-test") {
             exclude(module = "mockito-core")

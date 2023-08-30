@@ -35,5 +35,9 @@ enum class ErrorMessage(
     REVIEW_ALREADY_WRITTEN("이미 작성한 구매평이 있습니다"),
     REVIEW_NOT_FOUND("구매평 정보를 찾을 수 없습니다"),
     REVIEWER_NOT_MATCH("작성자 정보가 일치하지 않습니다"),
-    NOT_HAVE_PERMISSION("해당 권한이 없습니다")
+    NOT_HAVE_PERMISSION("해당 권한이 없습니다"),
+    UPLOAD_FILE_NOT_FOUND("업로드 파일을 찾지 못 했습니다"),
+    FILENAME_NOT_FOUND("업로드할 파일의 이름을 찾지 못 했습니다"),
+    ILLEGAL_FILE_FORMAT("잘못된 형식의 파일 입니다"),
+    FILE_UPLOAD_FAIL("파일 업로드 실패")
 }

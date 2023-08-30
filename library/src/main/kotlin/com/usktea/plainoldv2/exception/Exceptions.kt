@@ -31,6 +31,14 @@ class CartNotFoundException : GlobalException(errorMessage = ErrorMessage.CART_N
 class CookieNotFoundException : GlobalException(errorMessage = ErrorMessage.COOKIE_NOT_FOUND.value)
 class RefreshTokenNotFoundException : GlobalException(errorMessage = ErrorMessage.REFRESH_TOKEN_NOT_FOUND.value)
 class OrderCanWriteReviewNotFoundException :
-    GlobalException(httpStatus = HttpStatus.NOT_FOUND ,errorMessage = ErrorMessage.ORDER_CAN_WRITE_REVIEW_NOT_FOUND.value)
+    GlobalException(
+        httpStatus = HttpStatus.NOT_FOUND,
+        errorMessage = ErrorMessage.ORDER_CAN_WRITE_REVIEW_NOT_FOUND.value
+    )
+
 class ReviewAlreadyWrittenException : GlobalException(errorMessage = ErrorMessage.REVIEW_ALREADY_WRITTEN.value)
 class ReviewNotFoundException : GlobalException(errorMessage = ErrorMessage.REVIEW_NOT_FOUND.value)
+class UploadFileNotFoundException : GlobalException(errorMessage = ErrorMessage.UPLOAD_FILE_NOT_FOUND.value)
+class IllegalFileFormatException(filename: String) :
+    GlobalException(errorMessage = ErrorMessage.ILLEGAL_FILE_FORMAT.value + " [$filename]")
+class FileUploadFailException : GlobalException(errorMessage = ErrorMessage.FILE_UPLOAD_FAIL.value)

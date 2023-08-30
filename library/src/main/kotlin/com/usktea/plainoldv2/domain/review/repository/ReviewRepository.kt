@@ -15,11 +15,13 @@ import com.usktea.plainoldv2.domain.review.ReviewStatus
 import com.usktea.plainoldv2.exception.ProductNotFoundException
 import com.usktea.plainoldv2.exception.ReviewAlreadyWrittenException
 import com.usktea.plainoldv2.support.BaseRepository
+import io.netty.util.internal.ReflectionUtil
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
+import kotlin.jvm.internal.Reflection
 
 @Repository
 class ReviewRepository(
@@ -94,25 +96,6 @@ class ReviewRepository(
     }
 
     suspend fun update(entity: Review) {
-        queryFactory.transactionWithFactory { factory ->
-            val found = factory.singleQuery<Review> {
-                select(entity(Review::class))
-                from(entity(Review::class))
-                whereAnd(
-                    col(Review::id).equal(entity.id),
-                    col(Review::status).equal(ReviewStatus.ACTIVE)
-                )
-            }
-
-            found.updateTo(entity)
-
-            sessionFactory.withSession { session ->
-                session.merge(found).flatMap { session.flush() }
-            }
-        }
-    }
-
-    suspend fun delete(entity: Review) {
         queryFactory.transactionWithFactory { factory ->
             val found = factory.singleQuery<Review> {
                 select(entity(Review::class))
