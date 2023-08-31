@@ -18,7 +18,6 @@ data class Payment(
             )
         }
     }
-
 }
 
 enum class PaymentMethod(

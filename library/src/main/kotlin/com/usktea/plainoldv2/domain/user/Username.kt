@@ -17,7 +17,7 @@ data class Username(
         }
     }
 
-    fun afterAt(): String {
+    fun beforeAt(): String {
         return value.split("@")[0]
     }
 }
