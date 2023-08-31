@@ -9,7 +9,7 @@ class PaymentRouter {
     val context = "/payments"
 
     @Bean
-    fun paymentRouetes(handler: PaymentHandler) = coRouter {
+    fun paymentRoutes(handler: PaymentHandler) = coRouter {
         path(context).nest {
             POST("", handler::ready)
             GET("", handler::approve)

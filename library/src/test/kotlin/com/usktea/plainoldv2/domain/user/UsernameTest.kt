@@ -17,7 +17,7 @@ class UsernameTest {
     fun afterAt() {
         val username = Username("tjrxo1234@gmail.com")
 
-        val afterAt = username.afterAt()
+        val afterAt = username.beforeAt()
 
         afterAt shouldBe "tjrxo1234"
     }
